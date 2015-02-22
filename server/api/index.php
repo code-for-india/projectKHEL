@@ -64,7 +64,7 @@ function addAttendance() {
 		$stmt->execute();
 		$data->id = $db->lastInsertId();
 		$db = null;
-		echo json_encode($data->id);
+		echo '{"attendance": ' . json_encode($data->id) . '}';
 	} catch(PDOException $e) {
 		error_log($e->getMessage(), 3, '/var/tmp/php.log');
 		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
