@@ -11,7 +11,6 @@ import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
-  public static String TAG = "projectkhel";
   static final int MAIN_ACTIVITY = 0x1001;
   private Button mAttendanceButton;
   private Button mSyncButton;

@@ -25,6 +25,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.cfi.projectkhel.data.Attendance;
+import org.cfi.projectkhel.data.DataManager;
+import org.cfi.projectkhel.data.DataUtils;
 
 import static org.cfi.projectkhel.AttendanceConstants.*;
 
@@ -32,6 +34,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Attendance Activity
+ *
+ * TODO:
+ * 1. Move all hardcoded strings into resource file.
+ */
 public class AttendanceActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
 
   private ListView mainList;
@@ -43,8 +51,9 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   private int mYear;
   private int mMonthOfYear;
   private int mDayOfMonth;
-  private float userRankValue;
+
   private Attendance attendance;
+
 
   private static int [] IMAGES = { R.drawable.android_calendar,
                             R.drawable.android_earth,
@@ -75,6 +84,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   private void initialize() {
     // TODO: Fetch the logged in user.
     attendance = new Attendance("TODO");
+
     populateListContents();
 
     final Calendar c = Calendar.getInstance();
@@ -82,7 +92,6 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     mMonthOfYear = c.get(Calendar.MONTH);
     mDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
 
-    userRankValue = 3.0f;
   }
 
   @Override
@@ -107,7 +116,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
 
   public void onSubmitClick(View v) {
-
+    Log.d(TAG, "Attendance: " +  attendance);
   }
 
   public void onResetClick(View v) {
@@ -116,27 +125,233 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    Log.d(MainActivity.TAG, "Clicked on position: " + position + " id = " + id);
+    Log.d(TAG, "Clicked on position: " + position + " id = " + id);
+    final MyCustomData dataRow = mData.get(position);
     switch(position) {
       case ROW_DATE:
-        handleDateDialog(mData.get(position));
+        handleDateDialog(dataRow);
         break;
       case ROW_RATING:
-        handleRatingDialog(mData.get(position));
+        handleRatingDialog(dataRow);
         break;
       case ROW_LOCATION:
+        handleLocationDialog(dataRow);
         break;
       case ROW_BENEFICIARIES:
+        handleBeneficiariesDialog(dataRow);
         break;
       case ROW_MODULES:
+        handleModulesDialog(dataRow);
+        break;
+      case ROW_COORDINATORS:
+        handleCoordinatorsDialog(dataRow);
         break;
       case ROW_COMMENTS:
-        handleCommentsDialog(mData.get(position));
+        handleCommentsDialog(dataRow);
         break;
       default:
         break;
     }
     listAdapter.refresh();
+  }
+
+
+  private void handleDateDialog(final MyCustomData dataRow) {
+    final DatePickerDialog dpd = new DatePickerDialog(this,
+        new DatePickerDialog.OnDateSetListener() {
+
+          @Override
+          public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dataRow.setContent(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+            mYear = year;
+            mMonthOfYear = monthOfYear;
+            mDayOfMonth = dayOfMonth;
+            attendance.setDate(year, monthOfYear, dayOfMonth);
+          }
+        }, mYear, mMonthOfYear, mDayOfMonth);
+    dpd.show();
+  }
+
+  private void handleRatingDialog(final MyCustomData dataRow) {
+    if (ratingDialog == null) {
+      ratingDialog = new Dialog(AttendanceActivity.this, R.style.NoTitleDialog);
+      ratingDialog.setContentView(R.layout.rating_dialog);
+      ratingDialog.setCancelable(true);
+    }
+
+    final RatingBar ratingBar = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar);
+    ratingBar.setRating(attendance.getRating() * 1.0f);
+
+    final Button updateButton = (Button) ratingDialog.findViewById(R.id.rank_dialog_button);
+    updateButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        final int userRankValue = (int) ratingBar.getRating();
+        attendance.setRating(userRankValue);
+        dataRow.setContent(Integer.toString(userRankValue));
+        ratingDialog.dismiss();
+      }
+    });
+    //now that the dialog is set up, it's time to show it
+    ratingDialog.show();
+  }
+
+  private void handleCommentsDialog(final MyCustomData dataRow) {
+    // TODO - Move all hardcoded strings to resource files.
+    final EditText commentsTxt = new EditText(this);
+    commentsTxt.setHint("How did the session go?");
+    commentsTxt.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
+    new AlertDialog.Builder(this)
+        .setTitle("Enter Comments")
+        .setView(commentsTxt)
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+            final String comment = commentsTxt.getText().toString();
+            dataRow.setContent(shortenIt(comment));
+            attendance.setComments(comment);
+          }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+          }
+        })
+        .show();
+  }
+
+  private void handleCoordinatorsDialog(final MyCustomData dataRow) {
+    final CharSequence coordinatorNames[] = DataUtils.getEntryNames(DataManager.getInstance().getCoordinators());
+    boolean[] checkItems = DataUtils.getSelectedItemsFromIds(attendance.getCoordinators(),
+                                                    DataManager.getInstance().getCoordinators());
+    // List where we track the selected items
+    final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    // Set the dialog title
+    builder.setTitle("Pick Coordinators")
+        // Specify the list array, the items to be selected by default (null for none),
+        // and the listener through which to receive callbacks when items are selected
+        .setMultiChoiceItems(coordinatorNames, checkItems,
+            new DialogInterface.OnMultiChoiceClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                  // If the user checked the item, add it to the selected items
+                  selectedItems.add(which);
+                } else if (selectedItems.contains(which)) {
+                  // Else, if the item is already in the array, remove it
+                  selectedItems.remove(Integer.valueOf(which));
+                }
+              }
+            })
+            // Set the action buttons
+        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // User clicked OK, so save the mSelectedItems results somewhere
+            // or return them to the component that opened the dialog
+            dataRow.setContent("Chosen: " + selectedItems.size());
+            attendance.addCoordinators(DataUtils.getIdsFromSelectedItems(selectedItems,
+                DataManager.getInstance().getCoordinators()));
+          }
+        })
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // do nothing
+          }
+        });
+
+    builder.show();
+  }
+
+  private void handleModulesDialog(final MyCustomData dataRow) {
+    final boolean[] checkItems = DataUtils.getSelectedItemsFromIds(attendance.getModules(),
+                                                             DataManager.getInstance().getModules());
+    // List where we track the selected items
+    final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    // Set the dialog title
+    builder.setTitle("Pick Modules")
+        // Specify the list array, the items to be selected by default (null for none),
+        // and the listener through which to receive callbacks when items are selected
+        .setMultiChoiceItems(DataUtils.getEntryNames(DataManager.getInstance().getModules()), checkItems,
+            new DialogInterface.OnMultiChoiceClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                  // If the user checked the item, add it to the selected items
+                  selectedItems.add(which);
+                } else if (selectedItems.contains(which)) {
+                  // Else, if the item is already in the array, remove it
+                  selectedItems.remove(Integer.valueOf(which));
+                }
+              }
+            })
+            // Set the action buttons
+        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // User clicked OK, so save the mSelectedItems results somewhere
+            // or return them to the component that opened the dialog
+            dataRow.setContent(" [ " + selectedItems.size() + " ] ");
+            attendance.addModules(DataUtils.getIdsFromSelectedItems(selectedItems,
+                                  DataManager.getInstance().getModules()));
+          }
+        })
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // do nothing
+          }
+        });
+
+    builder.show();
+  }
+
+  private void handleBeneficiariesDialog(final MyCustomData dataRow) {
+  }
+
+  private void handleLocationDialog(final MyCustomData dataRow) {
+    final int checkItem = DataUtils.getSelectedItemFromId(attendance.getLocation(),
+                                                    DataManager.getInstance().getLocations());
+    // List where we track the selected item
+    final Integer selectedItem[] = new Integer[1];
+    selectedItem[0] = checkItem;
+    final CharSequence[] locItems = DataUtils.getEntryNames(DataManager.getInstance().getLocations());
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    // Set the dialog title
+    builder.setTitle("Pick Location")
+        // Specify the list array, the items to be selected by default (null for none),
+        // and the listener through which to receive callbacks when items are selected
+        . setSingleChoiceItems(locItems, checkItem,
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                selectedItem[0] = which;
+              }
+            })
+            // Set the action buttons
+        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // User clicked OK, so save the mSelectedItems results somewhere
+            // or return them to the component that opened the dialog
+            dataRow.setContent(locItems[selectedItem[0]].toString());
+            attendance.setLocation(DataUtils.getIdFromSelectedItem(selectedItem[0],
+                DataManager.getInstance().getLocations()));
+          }
+        })
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // do nothing
+          }
+        });
+
+    builder.show();
   }
 
   /**
@@ -187,7 +402,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
         convertView.setTag(viewHolder);
       } else {
         viewHolder = (MyViewHolder) convertView.getTag();
-        Log.d(MainActivity.TAG, "Reusing Row for " + position);
+        //Log.d(TAG, "Reusing Row for " + position);
       }
       viewHolder.setValues(mData.get(position));
       return convertView;
@@ -238,67 +453,9 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   }
 
-  private void handleDateDialog(final MyCustomData dataRow) {
-    final DatePickerDialog dpd = new DatePickerDialog(this,
-      new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-          dataRow.setContent(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-          mYear = year;
-          mMonthOfYear = monthOfYear;
-          mDayOfMonth = dayOfMonth;
-        }
-      }, mYear, mMonthOfYear, mDayOfMonth);
-    dpd.show();
-  }
-
-  private void handleRatingDialog(final MyCustomData dataRow) {
-    if (ratingDialog == null) {
-      ratingDialog = new Dialog(AttendanceActivity.this, R.style.NoTitleDialog);
-      ratingDialog.setContentView(R.layout.rating_dialog);
-      ratingDialog.setCancelable(true);
-    }
-
-    final RatingBar ratingBar = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar);
-    ratingBar.setRating(userRankValue);
-
-    final Button updateButton = (Button) ratingDialog.findViewById(R.id.rank_dialog_button);
-    updateButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        userRankValue = ratingBar.getRating();
-        dataRow.setContent(Float.toString(userRankValue));
-        ratingDialog.dismiss();
-      }
-    });
-    //now that the dialog is set up, it's time to show it
-    ratingDialog.show();
-  }
-
-  private void handleCommentsDialog(final MyCustomData dataRow) {
-    final EditText commentsTxt = new EditText(this);
-    commentsTxt.setHint("How did the session go?");
-    commentsTxt.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-
-    new AlertDialog.Builder(this)
-        .setTitle("Enter Comments")
-        .setView(commentsTxt)
-        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-            final String comment = commentsTxt.getText().toString();
-            dataRow.setContent(shortenIt(comment));
-            attendance.setComments(comment);
-          }
-        })
-        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-          }
-        })
-        .show();
-  }
-
   private String shortenIt(String data) {
     return data.substring(0, data.length() > SHORTEN_LEN ? SHORTEN_LEN : data.length()) + "...";
   }
+
+
 }

@@ -69,7 +69,12 @@ public class Attendance {
   }
 
   public void addCoordinators(List<Integer> coordinatorList) {
+    coordinators.clear();
     coordinators.addAll(coordinatorList);
+  }
+
+  public List<Integer> getCoordinators() {
+    return coordinators;
   }
 
   public void addModule(int moduleId) {
@@ -77,7 +82,12 @@ public class Attendance {
   }
 
   public void addModules(List<Integer> moduleList) {
+    modules.clear();
     modules.addAll(moduleList);
+  }
+
+  public List<Integer> getModules() {
+    return modules;
   }
 
   public void addBeneficiary(int beneficiaryId) {
@@ -88,6 +98,9 @@ public class Attendance {
     beneficiaries.addAll(beneficiaryList);
   }
 
+  public List<Integer> getBeneficiaries() {
+    return beneficiaries;
+  }
   /*
    * Convert in the following form
     {

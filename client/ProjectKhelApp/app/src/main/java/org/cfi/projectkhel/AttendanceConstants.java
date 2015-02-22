@@ -1,6 +1,8 @@
 package org.cfi.projectkhel;
 
 public interface AttendanceConstants {
+  String TAG = "projectkhel";
+
   int ROW_DATE = 0;
   int ROW_LOCATION = 1;
   int ROW_COORDINATORS = 2;
