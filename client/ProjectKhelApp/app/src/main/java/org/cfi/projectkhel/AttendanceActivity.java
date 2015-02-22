@@ -1,10 +1,13 @@
 package org.cfi.projectkhel;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,10 +18,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import org.cfi.projectkhel.data.Attendance;
+
+import static org.cfi.projectkhel.AttendanceConstants.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +36,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   private ListView mainList;
   private Dialog ratingDialog;
+  private final int SHORTEN_LEN = 15;
 
   private MyCustomListAdapter listAdapter;
   private List<MyCustomData> mData = new ArrayList<>();
@@ -35,6 +44,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   private int mMonthOfYear;
   private int mDayOfMonth;
   private float userRankValue;
+  private Attendance attendance;
 
   private static int [] IMAGES = { R.drawable.android_calendar,
                             R.drawable.android_earth,
@@ -63,6 +73,8 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   }
 
   private void initialize() {
+    // TODO: Fetch the logged in user.
+    attendance = new Attendance("TODO");
     populateListContents();
 
     final Calendar c = Calendar.getInstance();
@@ -106,13 +118,20 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Log.d(MainActivity.TAG, "Clicked on position: " + position + " id = " + id);
     switch(position) {
-      case 0:
+      case ROW_DATE:
         handleDateDialog(mData.get(position));
         break;
-      case 5:
+      case ROW_RATING:
         handleRatingDialog(mData.get(position));
         break;
-      case 2:
+      case ROW_LOCATION:
+        break;
+      case ROW_BENEFICIARIES:
+        break;
+      case ROW_MODULES:
+        break;
+      case ROW_COMMENTS:
+        handleCommentsDialog(mData.get(position));
         break;
       default:
         break;
@@ -255,5 +274,31 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     });
     //now that the dialog is set up, it's time to show it
     ratingDialog.show();
+  }
+
+  private void handleCommentsDialog(final MyCustomData dataRow) {
+    final EditText commentsTxt = new EditText(this);
+    commentsTxt.setHint("How did the session go?");
+    commentsTxt.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
+    new AlertDialog.Builder(this)
+        .setTitle("Enter Comments")
+        .setView(commentsTxt)
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+            final String comment = commentsTxt.getText().toString();
+            dataRow.setContent(shortenIt(comment));
+            attendance.setComments(comment);
+          }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+          }
+        })
+        .show();
+  }
+
+  private String shortenIt(String data) {
+    return data.substring(0, data.length() > SHORTEN_LEN ? SHORTEN_LEN : data.length()) + "...";
   }
 }
