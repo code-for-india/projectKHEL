@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `module` (
 
 CREATE TABLE IF NOT EXISTS `beneficiary` (
   `id` int(15) NOT NULL AUTO_INCREMENT, 
-  `location_id` int(11) NOT NULL AUTO_INCREMENT, 
+  `location_id` int(11) NOT NULL, 
   `name` varchar(100) NOT NULL,  
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  
   PRIMARY KEY (`id`),
