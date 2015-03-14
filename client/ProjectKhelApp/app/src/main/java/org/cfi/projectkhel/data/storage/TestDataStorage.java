@@ -70,7 +70,7 @@ public class TestDataStorage implements DataStorage {
     beneficiaries.add(LocationEntry.newEntry(3, "Veeru3", 4));
     beneficiaries.add(LocationEntry.newEntry(6, "Sum6", 4));
     beneficiaries.add(LocationEntry.newEntry(8, "Greg8", 2));
-    beneficiaries.add(LocationEntry.newEntry(10, "Alice10", 2));
+    beneficiaries.add(LocationEntry.newEntry(10, "Alice10", 3));
     beneficiaries.add(LocationEntry.newEntry(4, "Jane4", 8));
     beneficiaries.add(LocationEntry.newEntry(20, "Bob20", 8));
   }
