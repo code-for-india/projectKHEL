@@ -13,7 +13,7 @@ import java.util.List;
  */
 public final class DataUtils {
 
-  public static CharSequence [] getEntryNames(List<Entry> entries) {
+  public static CharSequence [] getEntryNames(List<? extends Entry> entries) {
     final CharSequence[] data = new CharSequence[entries.size()];
     int i = 0;
     for (Entry e : entries) {
@@ -22,7 +22,7 @@ public final class DataUtils {
     return data;
   }
 
-  public static Integer [] getEntryIds(List<Entry> entries) {
+  public static Integer [] getEntryIds(List<? extends Entry> entries) {
     final Integer[] data = new Integer[entries.size()];
     int i = 0;
     for (Entry e : entries) {
@@ -31,11 +31,11 @@ public final class DataUtils {
     return data;
   }
 
-  public static Integer getIdFromSelectedItem(Integer selItem, List<Entry> entryList) {
+  public static Integer getIdFromSelectedItem(Integer selItem, List<? extends Entry> entryList) {
     return entryList.get(selItem).getId();
   }
 
-  public static List<Integer> getIdsFromSelectedItems(List<Integer> selectedItems, List<Entry> entryList) {
+  public static List<Integer> getIdsFromSelectedItems(List<Integer> selectedItems, List<? extends Entry> entryList) {
 //    Log.d(AttendanceConstants.TAG, "In getIdsFromSelectedItems...");
     final List<Integer> data = new ArrayList<>(selectedItems.size() * 2);
     for (Integer id : selectedItems) {
@@ -46,7 +46,7 @@ public final class DataUtils {
     return data;
   }
 
-  public static Integer getSelectedItemFromId(Integer selId, List<Entry> entryList) {
+  public static Integer getSelectedItemFromId(Integer selId, List<? extends Entry> entryList) {
     int i = 0;
     for (Entry entry : entryList) {
       if (entry.getId() == selId) {
@@ -57,7 +57,7 @@ public final class DataUtils {
     return i;
   }
 
-  public static boolean[] getSelectedItemsFromIds(List<Integer> selectedIds, List<Entry> entryList) {
+  public static boolean[] getSelectedItemsFromIds(List<Integer> selectedIds, List<? extends Entry> entryList) {
 //    Log.d(AttendanceConstants.TAG, "In getSelectedItemsFromIds...");
     final boolean[] data = new boolean[entryList.size()];
     int i = 0;
@@ -84,4 +84,5 @@ public final class DataUtils {
     Log.d(AttendanceConstants.TAG, "getSelectedItemsFromBoolList: " + data);
     return data;
   }
+
 }

@@ -1,12 +1,17 @@
 package org.cfi.projectkhel;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import org.cfi.projectkhel.data.storage.FileStorageHandler;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -22,6 +27,10 @@ public class MainActivity extends ActionBarActivity {
 
     mAttendanceButton = (Button) findViewById(R.id.attendanceButton);
     mSyncButton = (Button) findViewById(R.id.syncButton);
+
+    // Get the application instance
+    final KhelApplication app = (KhelApplication) getApplication();
+    app.setStorageHandler(new FileStorageHandler(this));
   }
 
   public void onAttendanceClick(View v) {
@@ -31,6 +40,16 @@ public class MainActivity extends ActionBarActivity {
 
   public void onSyncClick(View v) {
     // TODO sync data
+  }
+
+  public boolean isConnected() {
+    ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    if (networkInfo != null && networkInfo.isConnected()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override

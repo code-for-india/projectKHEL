@@ -12,7 +12,8 @@ $app->get('/modules', 'getModules');
 $app->get('/module/:id', 'getModule');
 $app->get('/coordinators', 'getCoordinators');
 $app->get('/coordinator/:id', 'getCoordinator');
-$app->get('/beneficiaries/:locid', 'getBeneficiaries');
+$app->get('/beneficiaries', 'getBeneficiaries');
+$app->get('/beneficiaries/:locid', 'getBeneficiariesForLocation');
 
 $app->post('/attendance', 'addAttendance');
 
@@ -127,7 +128,21 @@ function getCoordinator($id) {
 	}
 }
 
-function getBeneficiaries($locid) {
+function getBeneficiaries() {
+	$sql = "SELECT id, name, location_id FROM beneficiary ORDER BY location_id";
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql);  
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$db = null;
+        echo '{"beneficiaries": ' . json_encode($data) . '}';
+	} catch(PDOException $e) {
+		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+	}
+}
+
+function getBeneficiariesForLocation($locid) {
 	$sql = "SELECT id, name FROM beneficiary WHERE location_id=:locnid";
 	try {
 		$db = getConnection();

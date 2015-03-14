@@ -7,7 +7,7 @@ public class Entry {
   private Integer id;
   private String name;
 
-  private Entry(Integer pId, String pName) {
+  Entry(Integer pId, String pName) {
     id = pId;
     name = pName;
   }

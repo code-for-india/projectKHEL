@@ -27,6 +27,8 @@ import android.widget.Toast;
 import org.cfi.projectkhel.data.Attendance;
 import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.DataUtils;
+import org.cfi.projectkhel.data.Entry;
+
 import static org.cfi.projectkhel.AttendanceConstants.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -113,11 +115,21 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     return super.onOptionsItemSelected(item);
   }
 
-
   public void onSubmitClick(View v) {
     Log.d(TAG, "Attendance: " +  attendance);
-    Toast.makeText(this, "Attendance data submitted", Toast.LENGTH_SHORT).show();
-    finish();
+    // TODO - Verify if all data is filled up, Ask for confirmation first.
+    new AlertDialog.Builder(this)
+        .setTitle("Submit Attendance?")
+        .setMessage("Did you fill up everything for this Event?")
+        .setIcon(android.R.drawable.ic_menu_compass)
+        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+          public void onClick(DialogInterface dialog, int whichButton) {
+            Toast.makeText(AttendanceActivity.this, "Attendance data submitted", Toast.LENGTH_SHORT).show();
+            finish();
+          }})
+        .setNegativeButton(android.R.string.no, null).show();
+
   }
 
   public void onResetClick(View v) {
@@ -312,9 +324,14 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   }
 
   private void handleBeneficiariesDialog(final MyCustomData dataRow) {
-    final CharSequence beneficiaryNames[] = DataUtils.getEntryNames(DataManager.getInstance().getBeneficiaries());
-    boolean[] checkItems = DataUtils.getSelectedItemsFromIds(attendance.getBeneficiaries(),
-        DataManager.getInstance().getBeneficiaries());
+    if (attendance.getLocation() <= 0) {
+      Toast.makeText(this, "Please select a location first", Toast.LENGTH_SHORT).show();
+      return;
+    }
+    final List<Entry> beneficiaries = DataManager.getInstance().getBeneficiariesForLocation(attendance.getLocation());
+    final CharSequence beneficiaryNames[] = DataUtils.getEntryNames(beneficiaries);
+    boolean[] checkItems = DataUtils.getSelectedItemsFromIds(attendance.getBeneficiaries(), beneficiaries);
+
     // List where we track the selected items
     final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
 
@@ -343,8 +360,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
             // User clicked OK, so save the mSelectedItems results somewhere
             // or return them to the component that opened the dialog
             dataRow.setContent(" [ " + selectedItems.size() + " ] ");
-            attendance.addBeneficiaries(DataUtils.getIdsFromSelectedItems(selectedItems,
-                DataManager.getInstance().getBeneficiaries()));
+            attendance.addBeneficiaries(DataUtils.getIdsFromSelectedItems(selectedItems, beneficiaries));
           }
         })
         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -2,6 +2,7 @@ package org.cfi.projectkhel.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,12 +20,16 @@ public class Attendance {
   private List<Integer> beneficiaries;
   private String comments;
   private int rating;
-  private final String userId;
+  private String userId;
 
-  public Attendance(String pUserId) {
+  private Attendance() {
     coordinators = new ArrayList<>();
     modules = new ArrayList<>();
     beneficiaries = new ArrayList<>();
+  }
+
+  public Attendance(String pUserId) {
+    this();
     userId = pUserId;
   }
 
