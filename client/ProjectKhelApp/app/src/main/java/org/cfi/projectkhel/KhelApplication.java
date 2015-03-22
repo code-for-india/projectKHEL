@@ -4,9 +4,8 @@ import android.app.Application;
 
 import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.DataStorage;
-import org.cfi.projectkhel.data.storage.FileDataStorage;
+import org.cfi.projectkhel.data.storage.LocalStorage;
 import org.cfi.projectkhel.data.storage.FileStorageHandler;
-import org.cfi.projectkhel.data.storage.TestDataStorage;
 import org.cfi.projectkhel.rest.MasterDataFetcher;
 
 /**
@@ -31,7 +30,7 @@ public class KhelApplication extends Application {
     this.dataFetcher = new MasterDataFetcher(storageHandler);
 
 //    DataStorage storage = new TestDataStorage();
-    final DataStorage storage = new FileDataStorage(storageHandler);
+    final DataStorage storage = new LocalStorage(storageHandler);
     DataManager.getInstance().initialize(storage);
   }
 }

@@ -17,6 +17,7 @@ $app->get('/beneficiaries/:locid', 'getBeneficiariesForLocation');
 
 $app->post('/attendance', 'addAttendance');
 $app->get('/attendances', 'getAttendances');
+$app->get('/mastersync', 'getMasterSync');
 
 $app->run();
 
@@ -33,14 +34,27 @@ function getLocations() {
   }
 }
 
+function getMasterSync() {
+  $sql = "select * FROM mastersync order by id";
+  try {
+    $db = getConnection();
+    $stmt = $db->query($sql);  
+    $data = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $db = null;
+    echo '{"mastersync": ' . json_encode($data) . '}';
+  } catch(PDOException $e) {
+    echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+  }
+}
+
 function getAttendances() {
   $sql = "select * from attendance ORDER BY id";
   try {
     $db = getConnection();
     $stmt = $db->query($sql);  
-    $locs = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $data = $stmt->fetchAll(PDO::FETCH_OBJ);
     $db = null;
-    echo '{"attendances": ' . json_encode($locs) . '}';
+    echo '{"attendances": ' . json_encode($data) . '}';
   } catch(PDOException $e) {
     echo '{"error":{"text":'. $e->getMessage() .'}}'; 
   }  

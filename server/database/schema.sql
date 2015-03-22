@@ -60,3 +60,17 @@ CREATE TABLE IF NOT EXISTS `beneficiary` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `location_id` (`location_id`)
 );
+
+CREATE TABLE IF NOT EXISTS `mastersync` (
+  `id` int(3) NOT NULL AUTO_INCREMENT, 
+  `name` varchar(50) NOT NULL,  
+  `synctime` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+);
+
+INSERT INTO `mastersync` (`id`, `name`, `synctime`) VALUES
+(1, 'locations', 1),
+(2, 'modules', 1),
+(3, 'coordinators', 1),
+(4, 'beneficiaries', 1);

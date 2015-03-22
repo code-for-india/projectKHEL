@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Uses the file internal storage to fetch the master data.
+ * Fetches master data from the local store into structures required for UI display.
+ *
  */
-public class FileDataStorage implements DataStorage {
+public class LocalStorage implements DataStorage {
 
   private FileStorageHandler storageHandler;
 
-  public FileDataStorage(FileStorageHandler pStorageHandler) {
+  public LocalStorage(FileStorageHandler pStorageHandler) {
     storageHandler = pStorageHandler;
   }
 
@@ -49,6 +50,12 @@ public class FileDataStorage implements DataStorage {
     return getEntries(data, "modules");
   }
 
+  /**
+   * For any generic type of Entry
+   * @param fileData actual data in the storage for this entry
+   * @param rootNode name of the entry (locations, modules, etc)
+   * @return List format
+   */
   private List<Entry> getEntries(String fileData, String rootNode) {
     Log.d(AttendanceConstants.TAG, "Getting entries for " + rootNode);
     final List<Entry> entries = new ArrayList<>();
@@ -66,6 +73,12 @@ public class FileDataStorage implements DataStorage {
     return entries;
   }
 
+  /**
+   * For specific to Location entries required for Beneficiaries.
+   * @param fileData actual data in the storage for this entry
+   * @param rootNode name of the entry (locations, modules, etc)
+   * @return List format
+   */
   private List<LocationEntry> getLocationEntries(String fileData, String rootNode) {
     final List<LocationEntry> entries = new ArrayList<>();
     try {

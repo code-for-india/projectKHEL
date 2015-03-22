@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Storage for testing purpose only.
+ * Creates entries for UI using hardcoded data values.
  */
-public class TestDataStorage implements DataStorage {
+public class DummyStorage implements DataStorage {
 
   private List<Entry> locations;
   private List<Entry> coordinators;
   private List<Entry> modules;
   private List<LocationEntry> beneficiaries;
 
-  public TestDataStorage() {
+  public DummyStorage() {
     coordinators = new ArrayList<>();
     locations = new ArrayList<>();
     beneficiaries = new ArrayList<>();

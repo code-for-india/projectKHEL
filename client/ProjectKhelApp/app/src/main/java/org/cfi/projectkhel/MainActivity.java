@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.cfi.projectkhel.data.Attendance;
 import org.cfi.projectkhel.data.storage.FileStorageHandler;
 import org.cfi.projectkhel.rest.MasterDataFetcher;
 
@@ -40,15 +41,26 @@ public class MainActivity extends ActionBarActivity {
     app.setStorageHandler(fileStorageHandler);
   }
 
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (isConnected()) {
+      masterDataFetcher.pushOfflineAttendanceData();
+    }
+  }
+
   public void onAttendanceClick(View v) {
     Intent intent = new Intent(this, AttendanceActivity.class);
     startActivityForResult(intent, MAIN_ACTIVITY);
   }
 
   public void onSyncClick(View v) {
-    // TODO sync data
-    masterDataFetcher.pullMasterData();
-    masterDataFetcher.pushOfflineAttendanceData();
+     if (isConnected()) {
+      masterDataFetcher.pullMasterData();
+      masterDataFetcher.pushOfflineAttendanceData();
+    } else {
+      Log.i(AttendanceConstants.TAG, "No network connectivity at this time");
+    }
   }
 
   public boolean isConnected() {

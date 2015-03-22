@@ -14,9 +14,11 @@ import org.cfi.projectkhel.data.Attendance;
 
 /**
  * Manages Android Internal storage for all the master data including attendances.
+ * Provides read and write functions to manage the data.
  */
 public class FileStorageHandler {
 
+  public static String FILE_MASTER_SYNC = "mastersync.khel";
   public static String FILE_LOCATIONS = "locations.khel";
   public static String FILE_MODULES = "modules.khel";
   public static String FILE_BENEFICIARIES = "beneficiaries.khel";
@@ -28,6 +30,11 @@ public class FileStorageHandler {
     context = pContext;
   }
 
+  /**
+   * Read data from a file.
+   * @param fileName
+   * @return file contents.
+   */
   public String readFileData(String fileName) {
     final StringBuilder stringBuffer = new StringBuilder();
     try {
@@ -45,6 +52,11 @@ public class FileStorageHandler {
     return stringBuffer.toString();
   }
 
+  /**
+   * Read data from a file. Useful to fetch all offline attendances.
+   * @param fileName
+   * @return file contents separated line by line
+   */
   public List<String> readFileDataLines(String fileName) {
     final List<String> list = new ArrayList<>();
     try {
@@ -62,17 +74,19 @@ public class FileStorageHandler {
     return list;
   }
 
+  /**
+   * Writes string contents to the file.
+   * @param fileName
+   * @param data
+   * @param append
+   * @return true if data was written without errors.
+   */
   public boolean writeFileData(String fileName, String data, boolean append) {
     boolean status = true;
-    FileOutputStream fos;
+    final int mode = append ? Context.MODE_APPEND : Context.MODE_PRIVATE;
+
     try {
-      final int mode;
-      if (append) {
-        mode = Context.MODE_APPEND;
-      } else {
-        mode = Context.MODE_PRIVATE;
-      }
-      fos = context.openFileOutput(fileName, mode);
+      FileOutputStream fos = context.openFileOutput(fileName, mode);
       fos.write(data.getBytes());
       fos.close();
     } catch (FileNotFoundException fnfe) {
@@ -85,4 +99,24 @@ public class FileStorageHandler {
     return status;
   }
 
+  /**
+   * Clears the file.
+   * @param fileName
+   * @return
+   */
+  public boolean emptyFile(String fileName) {
+    boolean status = true;
+    try {
+      FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+//      fos.write(0);
+      fos.close();
+    } catch (FileNotFoundException fnfe) {
+      fnfe.printStackTrace();
+      status = false;
+    } catch (IOException ex) {
+      ex.printStackTrace();
+      status = false;
+    }
+    return status;
+  }
 }
