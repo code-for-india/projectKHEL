@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Holds the master Data
+ * Holds the master Data and keeps a local cached copy.
  */
 public class DataManager {
 
@@ -15,14 +15,15 @@ public class DataManager {
   private List<Entry> coordinators;
   private List<Entry> modules;
   private List<LocationEntry> beneficiaries;
+  private DataStorage storage;
 
   private static DataManager instance = new DataManager();
 
-  private DataStorage storage;
-
   private DataManager() {
-    storage = new TestDataStorage();
-//    storage = new FileDataStorage();
+  }
+
+  public void initialize(DataStorage pStorage) {
+    storage = pStorage;
   }
 
   public static DataManager getInstance() {
@@ -60,7 +61,7 @@ public class DataManager {
   public List<Entry> getBeneficiariesForLocation(Integer locationId) {
     List<Entry> locBeneficiaries = new ArrayList<>();
     for (LocationEntry entry : getBeneficiaries()) {
-      if (entry.locationId == locationId) {
+      if (entry.locationId.equals(locationId)) {
         locBeneficiaries.add(entry);
       }
     }

@@ -27,6 +27,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="5dp"
         android:gravity="end"
+        style="@style/list_data"
         android:text="Content" />
 
 </LinearLayout>

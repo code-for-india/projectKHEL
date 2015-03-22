@@ -1,5 +1,8 @@
 package org.cfi.projectkhel.data.storage;
 
+import android.util.Log;
+
+import org.cfi.projectkhel.AttendanceConstants;
 import org.cfi.projectkhel.data.DataStorage;
 import org.cfi.projectkhel.data.Entry;
 import org.cfi.projectkhel.data.LocationEntry;
@@ -16,7 +19,11 @@ import java.util.List;
  */
 public class FileDataStorage implements DataStorage {
 
-  FileStorageHandler storageHandler;
+  private FileStorageHandler storageHandler;
+
+  public FileDataStorage(FileStorageHandler pStorageHandler) {
+    storageHandler = pStorageHandler;
+  }
 
   @Override
   public List<Entry> getLocations() {
@@ -43,6 +50,7 @@ public class FileDataStorage implements DataStorage {
   }
 
   private List<Entry> getEntries(String fileData, String rootNode) {
+    Log.d(AttendanceConstants.TAG, "Getting entries for " + rootNode);
     final List<Entry> entries = new ArrayList<>();
     try {
       final JSONObject json = new JSONObject(new JSONTokener(fileData));
@@ -54,6 +62,7 @@ public class FileDataStorage implements DataStorage {
     } catch (JSONException e) {
       e.printStackTrace();
     }
+    Log.d(AttendanceConstants.TAG, "Entries: " + entries);
     return entries;
   }
 

@@ -6,12 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.cfi.projectkhel.data.Attendance;
 import org.cfi.projectkhel.data.storage.FileStorageHandler;
+import org.cfi.projectkhel.rest.MasterDataFetcher;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,6 +22,7 @@ public class MainActivity extends ActionBarActivity {
   static final int MAIN_ACTIVITY = 0x1001;
   private Button mAttendanceButton;
   private Button mSyncButton;
+  private MasterDataFetcher masterDataFetcher;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,9 @@ public class MainActivity extends ActionBarActivity {
 
     // Get the application instance
     final KhelApplication app = (KhelApplication) getApplication();
-    app.setStorageHandler(new FileStorageHandler(this));
+    final FileStorageHandler fileStorageHandler = new FileStorageHandler(this);
+    masterDataFetcher = new MasterDataFetcher(fileStorageHandler);
+    app.setStorageHandler(fileStorageHandler);
   }
 
   public void onAttendanceClick(View v) {
@@ -40,6 +46,8 @@ public class MainActivity extends ActionBarActivity {
 
   public void onSyncClick(View v) {
     // TODO sync data
+    masterDataFetcher.pullMasterData();
+    masterDataFetcher.pushOfflineAttendanceData();
   }
 
   public boolean isConnected() {

@@ -33,4 +33,18 @@
         <item name="android:shadowDy" >1</item>
         <item name="android:shadowRadius" >2</item>
     </style>
+
+    <style name="list_data" >
+        <item name="android:layout_width" >fill_parent</item>
+        <item name="android:layout_height" >wrap_content</item>
+        <item name="android:textColor" >#0000ff</item>
+        <item name="android:gravity" >center</item>
+        <item name="android:layout_margin" >3dp</item>
+        <item name="android:textSize" >18dp</item>
+        <item name="android:textStyle" >normal</item>
+        <item name="android:shadowColor" >#ff9c9c9c</item>
+        <item name="android:shadowDx" >1</item>
+        <item name="android:shadowDy" >1</item>
+        <item name="android:shadowRadius" >2</item>
+    </style>
 </resources>

@@ -56,7 +56,6 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   private Attendance attendance;
 
-
   private static int [] IMAGES = { R.drawable.android_calendar,
                             R.drawable.android_earth,
                             R.drawable.android_friends,
@@ -126,6 +125,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
           public void onClick(DialogInterface dialog, int whichButton) {
             Toast.makeText(AttendanceActivity.this, "Attendance data submitted", Toast.LENGTH_SHORT).show();
+            ((KhelApplication) getApplication()).getDataFetcher().pushAttendanceData(attendance);
             finish();
           }})
         .setNegativeButton(android.R.string.no, null).show();
@@ -167,7 +167,6 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     }
     listAdapter.refresh();
   }
-
 
   private void handleDateDialog(final MyCustomData dataRow) {
     final DatePickerDialog dpd = new DatePickerDialog(this,

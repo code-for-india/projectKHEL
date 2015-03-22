@@ -34,10 +34,14 @@ public class MasterDataFetcher {
    */
   public void pullMasterData() {
     // TODO - Criteria to determine if data is already up to date.
-
+    Log.d(AttendanceConstants.TAG, "Pulling Master data");
+    Log.d(AttendanceConstants.TAG, "Fetching locations");
     fetchAndStore("locations", null, FileStorageHandler.FILE_LOCATIONS);
+    Log.d(AttendanceConstants.TAG, "Fetching modules");
     fetchAndStore("modules", null, FileStorageHandler.FILE_MODULES);
+    Log.d(AttendanceConstants.TAG, "Fetching coordinators");
     fetchAndStore("coordinators", null, FileStorageHandler.FILE_COORDINATORS);
+    Log.d(AttendanceConstants.TAG, "Fetching beneficiaries");
     fetchAndStore("beneficiaries", null, FileStorageHandler.FILE_BENEFICIARIES);
   }
 
@@ -50,6 +54,7 @@ public class MasterDataFetcher {
   }
 
   public void pushOfflineAttendanceData() {
+    Log.d(AttendanceConstants.TAG, "Pushing offline Attendances");
     List<String> attendances = storageHandler.readFileDataLines(FileStorageHandler.FILE_ATTENDANCE);
     if (attendances.size() == 0) {
       Log.d(AttendanceConstants.TAG, "No offline attendances to sync");
@@ -74,17 +79,22 @@ public class MasterDataFetcher {
       @Override
       public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         // TODO
+        Log.e(AttendanceConstants.TAG, "Error fetching data from server ");
+        throwable.printStackTrace();
       }
 
       @Override
       public void onSuccess(int statusCode, Header[] headers, String responseString) {
+        Log.d(AttendanceConstants.TAG, "Got REST Response: " + responseString);
         storageHandler.writeFileData(fileName, responseString, false);
+        Log.d(AttendanceConstants.TAG, "Wrote to file: " + fileName);
       }
     });
   }
 
   private void postAttendance(final String attendanceData) {
     try {
+      Log.d(AttendanceConstants.TAG, "Posting Attendance data to server" + attendanceData);
       RestClient.post("attendance", new StringEntity(attendanceData), new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
