@@ -12,11 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import org.cfi.projectkhel.data.Attendance;
 import org.cfi.projectkhel.data.storage.FileStorageHandler;
 import org.cfi.projectkhel.rest.MasterDataFetcher;
 
-
+/**
+ * Main Activity of the Application.
+ */
 public class MainActivity extends ActionBarActivity {
 
   static final int MAIN_ACTIVITY = 0x1001;

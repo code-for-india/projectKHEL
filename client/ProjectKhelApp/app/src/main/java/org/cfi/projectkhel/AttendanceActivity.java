@@ -453,7 +453,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      MyViewHolder viewHolder = null;
+      final MyViewHolder viewHolder;
       if (convertView == null) {
         // No convertView in recycle pool yet
         convertView = mInflater.inflate(R.layout.attendance_row, parent, false);
