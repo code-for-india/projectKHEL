@@ -1,7 +1,7 @@
 package org.cfi.projectkhel.data;
 
 /**
- * Entry class
+ * Entry class. Note this class is immutable.
  */
 public class Entry {
   private Integer id;
@@ -20,10 +20,6 @@ public class Entry {
     return id;
   }
 
-//  public void setId(Integer id) {
-//    this.id = id;
-//  }
-
   @Override
   public String toString() {
     return "Entry{" +
@@ -35,8 +31,4 @@ public class Entry {
   public String getName() {
     return name;
   }
-//
-//  public void setName(String name) {
-//    this.name = name;
-//  }
 }

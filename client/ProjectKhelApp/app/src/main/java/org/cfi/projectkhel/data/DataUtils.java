@@ -49,7 +49,7 @@ public final class DataUtils {
   public static Integer getSelectedItemFromId(Integer selId, List<? extends Entry> entryList) {
     int i = 0;
     for (Entry entry : entryList) {
-      if (entry.getId() == selId) {
+      if (entry.getId().equals(selId)) {
         break;
       }
       i++;

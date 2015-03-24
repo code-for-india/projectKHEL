@@ -119,7 +119,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     // TODO - Verify if all data is filled up, Ask for confirmation first.
     new AlertDialog.Builder(this)
         .setTitle("Submit Attendance?")
-        .setMessage("Did you fill up everything for this Event?")
+        .setMessage("Do you want to submit the data?")
         .setIcon(android.R.drawable.ic_menu_compass)
         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
