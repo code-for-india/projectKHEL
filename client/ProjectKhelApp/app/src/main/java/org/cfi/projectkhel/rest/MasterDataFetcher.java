@@ -44,13 +44,13 @@ public class MasterDataFetcher {
    * Pulls all the master data from the server.
    */
   public void pullMasterData() {
-    // TODO - Criteria to determine if data is already up to date.
-    // Fetch the old records first.
+
+    // Get the master sync record.
     masterSyncData = storageHandler.readFileData(FileStorageHandler.FILE_MASTER_SYNC);
 
-    Log.d(AttendanceConstants.TAG, "Pulling Master data: " + masterSyncData);
+    Log.d(AttendanceConstants.TAG, "Sync Master data: " + masterSyncData);
 
-    // Fetch the new ones only (dont update).
+    // Based on the Master sync record, fetch the ones that need update.
     fetchAndStore("mastersync", null, FileStorageHandler.FILE_MASTER_SYNC, false);
   }
 

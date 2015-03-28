@@ -33,6 +33,10 @@ public class Attendance {
     userId = pUserId;
   }
 
+  public Attendance clone() {
+    return new Attendance(this.userId);
+  }
+
   public String getDate() {
     return date;
   }

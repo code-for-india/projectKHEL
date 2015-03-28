@@ -46,6 +46,10 @@ public class FileStorageHandler {
       while ((inputString = inputReader.readLine()) != null) {
         stringBuffer.append(inputString + "\n");
       }
+      inputReader.close();
+    } catch (FileNotFoundException fnfe) {
+      // If file is not found, create an empty one.
+      emptyFile(fileName);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -68,6 +72,10 @@ public class FileStorageHandler {
       while ((inputString = inputReader.readLine()) != null) {
         list.add(inputString);
       }
+      inputReader.close();
+    }  catch (FileNotFoundException fnfe) {
+      // If file is not found, create an empty one.
+      emptyFile(fileName);
     } catch (IOException e) {
       e.printStackTrace();
     }

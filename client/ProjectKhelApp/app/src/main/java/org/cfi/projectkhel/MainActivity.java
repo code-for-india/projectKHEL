@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.cfi.projectkhel.data.Attendance;
+import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.storage.FileStorageHandler;
 import org.cfi.projectkhel.rest.MasterDataFetcher;
 
@@ -39,6 +41,8 @@ public class MainActivity extends ActionBarActivity {
     final FileStorageHandler fileStorageHandler = new FileStorageHandler(this);
     masterDataFetcher = new MasterDataFetcher(fileStorageHandler);
     app.setStorageHandler(fileStorageHandler);
+    // Not sure if this is the best place to load all data
+    DataManager.getInstance().loadAll();
   }
 
   @Override
@@ -50,16 +54,24 @@ public class MainActivity extends ActionBarActivity {
   }
 
   public void onAttendanceClick(View v) {
-    Intent intent = new Intent(this, AttendanceActivity.class);
-    startActivityForResult(intent, MAIN_ACTIVITY);
+    if (DataManager.getInstance().isDataPopulated()) {
+      Intent intent = new Intent(this, AttendanceActivity.class);
+      startActivityForResult(intent, MAIN_ACTIVITY);
+    } else {
+      // No data populated.
+      Toast.makeText(this, "Master data missing. Doing Sync...", Toast.LENGTH_LONG).show();
+      onSyncClick(v);
+    }
   }
 
   public void onSyncClick(View v) {
      if (isConnected()) {
       masterDataFetcher.pullMasterData();
       masterDataFetcher.pushOfflineAttendanceData();
+      DataManager.getInstance().loadAll();
     } else {
       Log.i(AttendanceConstants.TAG, "No network connectivity at this time");
+      Toast.makeText(this, "No connection. Check network connectivity", Toast.LENGTH_SHORT).show();
     }
   }
 
