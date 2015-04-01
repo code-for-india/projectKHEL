@@ -63,13 +63,14 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
                             R.drawable.aperture,
                             R.drawable.happy,
                             R.drawable.clipboard};
-  // TODO move to resources instead.
-  private static String [] LABELS = { "Date", "Location", "Coordinators", "Beneficiary", "Modules", "Rating", "Comments"};
+
+  private static String [] ATTENDANCE_ELEM_LABELS;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_attendance);
+    ATTENDANCE_ELEM_LABELS = getResources().getStringArray(R.array.attendance_elems);
 
     mainList = (ListView) findViewById(R.id.listView1);
     mainList.setOnItemClickListener(this);
@@ -117,25 +118,26 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   public void onSubmitClick(View v) {
     Log.d(TAG, "Attendance: " +  attendance);
     // TODO - Verify if all data is filled up, Ask for confirmation first.
-    new AlertDialog.Builder(this)
-        .setTitle("Submit Attendance?")
-        .setMessage("Do you want to submit the data?")
+    AlertDialog show = new AlertDialog.Builder(this)
+        .setTitle(getString(R.string.submit_attendance))
+        .setMessage(getString(R.string.submit_confirm))
         .setIcon(android.R.drawable.ic_menu_compass)
         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
           public void onClick(DialogInterface dialog, int whichButton) {
-            Toast.makeText(AttendanceActivity.this, "Attendance data submitted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AttendanceActivity.this, getString(R.string.submit_inform), Toast.LENGTH_SHORT).show();
             ((KhelApplication) getApplication()).getDataFetcher().pushAttendanceData(attendance);
             finish();
-          }})
+          }
+        })
         .setNegativeButton(android.R.string.no, null).show();
 
   }
 
   public void onResetClick(View v) {
     new AlertDialog.Builder(this)
-        .setTitle("Reset Attendance?")
-        .setMessage("Do you want to reset the data?")
+        .setTitle(getString(R.string.reset_attendance))
+        .setMessage(getString(R.string.reset_confirm))
         .setIcon(android.R.drawable.ic_menu_compass)
         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -207,7 +209,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     final CharSequence[] locItems = DataUtils.getEntryNames(locations);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick Location")
+    builder.setTitle(getString(R.string.location_dialog_title))
         . setSingleChoiceItems(locItems, checkItem,
             new DialogInterface.OnClickListener() {
               @Override
@@ -215,7 +217,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
                 selectedItem[0] = which;
               }
             })
-        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             dataRow.setContent(locItems[selectedItem[0]].toString());
@@ -223,7 +225,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
             listAdapter.notifyDataSetChanged();
           }
         })
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             // do nothing
@@ -242,7 +244,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick Coordinators")
+    builder.setTitle(getString(R.string.coor_dialog_title))
         .setMultiChoiceItems(coordinatorNames, checkItems,
             new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -256,7 +258,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
                 }
               }
             })
-        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             dataRow.setContent(" [ " + selectedItems.size() + " ] ");
@@ -264,7 +266,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
             listAdapter.notifyDataSetChanged();
           }
         })
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             // do nothing
@@ -282,7 +284,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick Modules")
+    builder.setTitle(getString(R.string.mod_dialog_title))
         .setMultiChoiceItems(DataUtils.getEntryNames(modules), checkItems,
             new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -296,7 +298,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
                 }
               }
             })
-        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             dataRow.setContent(" [ " + selectedItems.size() + " ] ");
@@ -304,7 +306,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
             listAdapter.notifyDataSetChanged();
           }
         })
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             // do nothing
@@ -316,7 +318,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   private void handleBeneficiariesDialog(final MyCustomData dataRow) {
     if (attendance.getLocation() <= 0) {
-      Toast.makeText(this, "Please select a location first", Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.benef_location_select), Toast.LENGTH_SHORT).show();
       return;
     }
     final List<Entry> beneficiaries = DataManager.getInstance().getBeneficiariesForLocation(attendance.getLocation());
@@ -327,7 +329,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick Beneficiaries")
+    builder.setTitle(getString(R.string.benef_dialog_title))
         .setMultiChoiceItems(beneficiaryNames, checkItems,
             new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -341,7 +343,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
                 }
               }
             })
-        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             dataRow.setContent(" [ " + selectedItems.size() + " ] ");
@@ -349,7 +351,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
             listAdapter.notifyDataSetChanged();
           }
         })
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
             // do nothing
@@ -386,15 +388,14 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   }
 
   private void handleCommentsDialog(final MyCustomData dataRow) {
-    // TODO - Move all hardcoded strings to resource files.
     final EditText commentsTxt = new EditText(this);
-    commentsTxt.setHint("How did the session go?");
+    commentsTxt.setHint(getString(R.string.comments_hint));
     commentsTxt.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
     new AlertDialog.Builder(this)
-        .setTitle("Enter Comments")
+        .setTitle(getString(R.string.comments_title))
         .setView(commentsTxt)
-        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
             final String comment = commentsTxt.getText().toString();
             dataRow.setContent(shortenIt(comment));
@@ -402,7 +403,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
             listAdapter.notifyDataSetChanged();
           }
         })
-        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
           }
         })
@@ -479,8 +480,8 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   }
 
   private void populateListContents() {
-    for (int i = 0; i < LABELS.length; i++) {
-      mData.add(new MyCustomData(IMAGES[i], LABELS[i], ""));
+    for (int i = 0; i < ATTENDANCE_ELEM_LABELS.length; i++) {
+      mData.add(new MyCustomData(IMAGES[i], ATTENDANCE_ELEM_LABELS[i], ""));
     }
   }
 

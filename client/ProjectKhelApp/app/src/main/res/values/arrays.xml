@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="attendance_elems">
+        <item>@string/row_date</item>
+        <item>@string/row_location</item>
+        <item>@string/row_coordinator</item>
+        <item>@string/row_beneficiary</item>
+        <item>@string/row_modules</item>
+        <item>@string/row_rating</item>
+        <item>@string/row_comments</item>
+    </string-array>
+
+</resources>

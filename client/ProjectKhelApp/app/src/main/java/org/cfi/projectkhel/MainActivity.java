@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
       startActivityForResult(intent, MAIN_ACTIVITY);
     } else {
       // No data populated.
-      Toast.makeText(this, "Master data missing. Doing Sync...", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, getString(R.string.nomastersync), Toast.LENGTH_LONG).show();
       onSyncClick(v);
     }
   }
@@ -70,8 +70,8 @@ public class MainActivity extends ActionBarActivity {
       masterDataFetcher.pushOfflineAttendanceData();
       DataManager.getInstance().loadAll();
     } else {
-      Log.i(AttendanceConstants.TAG, "No network connectivity at this time");
-      Toast.makeText(this, "No connection. Check network connectivity", Toast.LENGTH_SHORT).show();
+      Log.i(AttendanceConstants.TAG, getString(R.string.nonetwork));
+      Toast.makeText(this, getString(R.string.nonetwork), Toast.LENGTH_SHORT).show();
     }
   }
 

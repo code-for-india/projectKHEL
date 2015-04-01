@@ -7,4 +7,29 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <string name="row_date">Date</string>
+    <string name="row_location">Location</string>
+    <string name="row_coordinator">Coordinators</string>
+    <string name="row_beneficiary">Beneficiary</string>
+    <string name="row_modules">Modules</string>
+    <string name="row_rating">Rating</string>
+    <string name="row_comments">Comments</string>
+
+    <string name="nomastersync">Master data missing. Doing Sync...</string>
+    <string name="nonetwork">No connection. Check network connectivity</string>
+    <string name="submit_attendance">Submit Attendance?</string>
+    <string name="ask_submit">Do you want to submit the data?</string>
+    <string name="submit_inform">Attendance data submitted</string>
+    <string name="reset_confirm">Do you want to reset the data?</string>
+    <string name="submit_confirm">Do you want to submit data?</string>
+    <string name="reset_attendance">Reset Attendance?</string>
+    <string name="location_dialog_title">Pick Location</string>
+    <string name="coor_dialog_title">Pick Coordinators</string>
+    <string name="mod_dialog_title">Pick Modules</string>
+    <string name="benef_dialog_title">Pick Beneficiaries</string>
+    <string name="benef_location_select">Please select a location first</string>
+    <string name="comments_title">Enter Comments</string>
+    <string name="comments_hint">How did the session go?</string>
+
 </resources>
