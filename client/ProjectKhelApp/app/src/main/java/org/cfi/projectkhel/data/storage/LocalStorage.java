@@ -29,25 +29,25 @@ public class LocalStorage implements DataStorage {
   @Override
   public List<Entry> getLocations() {
     final String data = storageHandler.readFileData(FileStorageHandler.FILE_LOCATIONS);
-    return getEntries(data, "locations");
+    return getEntries(data, LOCATIONS);
   }
 
   @Override
   public List<Entry> getCoordinators() {
     final String data = storageHandler.readFileData(FileStorageHandler.FILE_COORDINATORS);
-    return getEntries(data, "coordinators");
+    return getEntries(data, COORDINATORS);
   }
 
   @Override
   public List<LocationEntry> getBeneficiaries() {
     final String data = storageHandler.readFileData(FileStorageHandler.FILE_BENEFICIARIES);
-    return getLocationEntries(data, "beneficiaries");
+    return getLocationEntries(data, BENEFICIARIES);
   }
 
   @Override
   public List<Entry> getModules() {
     final String data = storageHandler.readFileData(FileStorageHandler.FILE_MODULES);
-    return getEntries(data, "modules");
+    return getEntries(data, MODULES);
   }
 
   /**

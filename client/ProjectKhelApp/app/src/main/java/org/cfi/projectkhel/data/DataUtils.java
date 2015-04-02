@@ -81,7 +81,7 @@ public final class DataUtils {
       }
       i++;
     }
-    Log.d(AttendanceConstants.TAG, "getSelectedItemsFromBoolList: " + data);
+    //Log.d(AttendanceConstants.TAG, "getSelectedItemsFromBoolList: " + data);
     return data;
   }
 

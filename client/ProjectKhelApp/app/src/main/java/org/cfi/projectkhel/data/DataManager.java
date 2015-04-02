@@ -32,7 +32,7 @@ public class DataManager {
   }
 
   public boolean isDataPopulated() {
-    return (locations == null || locations.size() == 0) ? false : true;
+    return !(locations == null || locations.size() == 0);
   }
 
   /**
