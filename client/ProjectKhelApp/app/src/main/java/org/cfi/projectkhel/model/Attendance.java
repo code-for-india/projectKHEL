@@ -1,11 +1,9 @@
-package org.cfi.projectkhel.data;
+package org.cfi.projectkhel.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

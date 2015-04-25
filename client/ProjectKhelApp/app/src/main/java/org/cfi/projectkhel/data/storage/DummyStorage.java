@@ -1,8 +1,8 @@
 package org.cfi.projectkhel.data.storage;
 
 import org.cfi.projectkhel.data.DataStorage;
-import org.cfi.projectkhel.data.Entry;
-import org.cfi.projectkhel.data.LocationEntry;
+import org.cfi.projectkhel.model.Entry;
+import org.cfi.projectkhel.model.LocationEntry;
 
 import java.util.ArrayList;
 import java.util.List;

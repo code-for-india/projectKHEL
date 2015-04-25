@@ -1,6 +1,8 @@
-package org.cfi.projectkhel.rest;
+package org.cfi.projectkhel;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -8,10 +10,9 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
-import org.cfi.projectkhel.AttendanceConstants;
-import org.cfi.projectkhel.data.Attendance;
-import org.cfi.projectkhel.data.Entry;
-import org.cfi.projectkhel.data.storage.FileStorageHandler;
+import org.cfi.projectkhel.data.FileStorageUtils;
+import org.cfi.projectkhel.model.Attendance;
+import org.cfi.projectkhel.rest.RestClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,36 +28,46 @@ import java.util.List;
  */
 public class MasterDataFetcher {
 
-  private static final int MIN_LENGTH = 10;
+  //  private static final int MIN_LENGTH = 10;
   private static final int LOC_INDEX = 0;
   private static final int COOR_INDEX = 1;
   private static final int MOD_INDEX = 2;
   private static final int BENF_INDEX = 3;
 
-  private FileStorageHandler storageHandler;
+  private FileStorageUtils storageHandler;
   private String masterSyncData;
+  private Context context;
 
-  public MasterDataFetcher(FileStorageHandler pStorageHandler) {
-    storageHandler = pStorageHandler;
+  public MasterDataFetcher(Context pContext) {
+    context = pContext;
+    storageHandler = new FileStorageUtils(context);
+  }
+
+  public FileStorageUtils getStorageHandler() {
+    return storageHandler;
   }
 
   /**
    * Pulls all the master data from the server.
    */
-  public void pullMasterData() {
+  public void pullMasterData(boolean alwaysPull) {
 
     // Get the master sync record.
-    masterSyncData = storageHandler.readFileData(FileStorageHandler.FILE_MASTER_SYNC);
+    masterSyncData = storageHandler.readFileData(FileStorageUtils.FILE_MASTER_SYNC);
 
     Log.d(AttendanceConstants.TAG, "Sync Master data: " + masterSyncData);
 
     // Based on the Master sync record, fetch the ones that need update.
-    fetchAndStore("mastersync", null, FileStorageHandler.FILE_MASTER_SYNC, false);
+    if (!alwaysPull) {
+      fetchAndStore("mastersync", null, FileStorageUtils.FILE_MASTER_SYNC, false);
+    } else {
+      fetchMasters(null);
+    }
   }
 
   /**
    * Pushes attendance to Server and if no connection, appends it to internal storage for later sync.
-   * @param data
+   * @param data attendance data
    */
   public void pushAttendanceData(Attendance data) {
     postAttendance(data.toJSON());
@@ -64,12 +75,13 @@ public class MasterDataFetcher {
 
   public void pushOfflineAttendanceData() {
     Log.d(AttendanceConstants.TAG, "Pushing offline Attendances");
-    List<String> attendances = storageHandler.readFileDataLines(FileStorageHandler.FILE_ATTENDANCE);
+    List<String> attendances = storageHandler.readFileDataLines(FileStorageUtils.FILE_ATTENDANCE);
     if (attendances.size() == 0) {
       Log.d(AttendanceConstants.TAG, "No offline attendances to sync");
     } else {
+      Toast.makeText(context, "Syncing " + attendances.size() + " offline Attendances" , Toast.LENGTH_SHORT).show();
       // Clear the file since we don't want these to be submitted again.
-      storageHandler.emptyFile(FileStorageHandler.FILE_ATTENDANCE);
+      storageHandler.emptyFile(FileStorageUtils.FILE_ATTENDANCE);
       for (String s : attendances) {
         postAttendance(s);
       }
@@ -82,7 +94,7 @@ public class MasterDataFetcher {
    */
   public void writeAttendanceData(String jsonData) {
     Log.d(AttendanceConstants.TAG, "Saving attendance for offline sync " + jsonData);
-    storageHandler.writeFileData(FileStorageHandler.FILE_ATTENDANCE, jsonData + "\n", true);
+    storageHandler.writeFileData(FileStorageUtils.FILE_ATTENDANCE, jsonData + "\n", true);
   }
 
   private void fetchAndStore(final String relativeURL, final RequestParams params,
@@ -104,42 +116,41 @@ public class MasterDataFetcher {
           Log.d(AttendanceConstants.TAG, "Wrote to file: " + fileName);
         }
 
-        if (FileStorageHandler.FILE_MASTER_SYNC.equals(fileName)) {
-          fetchMasters(responseString);
+        if (FileStorageUtils.FILE_MASTER_SYNC.equals(fileName)) {
+          boolean result[] = compareSyncTimes(masterSyncData, responseString);
+          fetchMasters(result);
+          storageHandler.writeFileData(FileStorageUtils.FILE_MASTER_SYNC, responseString, false);
         }
       }
     });
   }
 
-  private void fetchMasters(String newMasterSyncData) {
-    boolean result[] = compareSyncTimes(masterSyncData, newMasterSyncData);
-
-    if (result[LOC_INDEX]) {
+  private void fetchMasters(boolean result[]) {
+    Log.d(AttendanceConstants.TAG, "Fetching masters " + result);
+    if (result == null || result[LOC_INDEX]) {
       Log.d(AttendanceConstants.TAG, "Fetching locations");
-      fetchAndStore("locations", null, FileStorageHandler.FILE_LOCATIONS, true);
+      fetchAndStore("locations", null, FileStorageUtils.FILE_LOCATIONS, true);
     } else {
       Log.d(AttendanceConstants.TAG, "Locations already up to date");
     }
-    if (result[MOD_INDEX]) {
+    if (result == null || result[MOD_INDEX]) {
       Log.d(AttendanceConstants.TAG, "Fetching modules");
-      fetchAndStore("modules", null, FileStorageHandler.FILE_MODULES, true);
+      fetchAndStore("modules", null, FileStorageUtils.FILE_MODULES, true);
     } else {
       Log.d(AttendanceConstants.TAG, "modules already up to date");
     }
-    if (result[COOR_INDEX]) {
+    if (result == null || result[COOR_INDEX]) {
       Log.d(AttendanceConstants.TAG, "Fetching coordinators");
-      fetchAndStore("coordinators", null, FileStorageHandler.FILE_COORDINATORS, true);
+      fetchAndStore("coordinators", null, FileStorageUtils.FILE_COORDINATORS, true);
     } else {
       Log.d(AttendanceConstants.TAG, "coordinators already up to date");
     }
-    if (result[BENF_INDEX]) {
+    if (result == null || result[BENF_INDEX]) {
       Log.d(AttendanceConstants.TAG, "Fetching beneficiaries");
-      fetchAndStore("beneficiaries", null, FileStorageHandler.FILE_BENEFICIARIES, true);
+      fetchAndStore("beneficiaries", null, FileStorageUtils.FILE_BENEFICIARIES, true);
     } else {
       Log.d(AttendanceConstants.TAG, "beneficiaries already up to date");
     }
-
-    storageHandler.writeFileData(FileStorageHandler.FILE_MASTER_SYNC, newMasterSyncData, false);
   }
 
   private void postAttendance(final String attendanceData) {

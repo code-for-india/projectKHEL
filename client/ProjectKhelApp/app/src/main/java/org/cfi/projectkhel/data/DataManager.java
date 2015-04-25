@@ -2,6 +2,9 @@ package org.cfi.projectkhel.data;
 
 import android.util.Log;
 
+import org.cfi.projectkhel.model.Entry;
+import org.cfi.projectkhel.model.LocationEntry;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +81,7 @@ public class DataManager {
   public List<Entry> getBeneficiariesForLocation(Integer locationId) {
     List<Entry> locBeneficiaries = new ArrayList<>();
     for (LocationEntry entry : getBeneficiaries()) {
-      if (entry.locationId.equals(locationId)) {
+      if (entry.getLocationId().equals(locationId)) {
         locBeneficiaries.add(entry);
       }
     }

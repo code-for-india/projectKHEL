@@ -1,4 +1,4 @@
-package org.cfi.projectkhel.data;
+package org.cfi.projectkhel.model;
 
 /**
  * Tracks the beneficiary entries.

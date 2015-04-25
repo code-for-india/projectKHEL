@@ -3,9 +3,9 @@ package org.cfi.projectkhel.data;
 import android.util.Log;
 
 import org.cfi.projectkhel.AttendanceConstants;
+import org.cfi.projectkhel.model.Entry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -4,8 +4,9 @@ import android.util.Log;
 
 import org.cfi.projectkhel.AttendanceConstants;
 import org.cfi.projectkhel.data.DataStorage;
-import org.cfi.projectkhel.data.Entry;
-import org.cfi.projectkhel.data.LocationEntry;
+import org.cfi.projectkhel.data.FileStorageUtils;
+import org.cfi.projectkhel.model.Entry;
+import org.cfi.projectkhel.model.LocationEntry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,33 +21,33 @@ import java.util.List;
  */
 public class LocalStorage implements DataStorage {
 
-  private FileStorageHandler storageHandler;
+  private FileStorageUtils storageHandler;
 
-  public LocalStorage(FileStorageHandler pStorageHandler) {
+  public LocalStorage(FileStorageUtils pStorageHandler) {
     storageHandler = pStorageHandler;
   }
 
   @Override
   public List<Entry> getLocations() {
-    final String data = storageHandler.readFileData(FileStorageHandler.FILE_LOCATIONS);
+    final String data = storageHandler.readFileData(FileStorageUtils.FILE_LOCATIONS);
     return getEntries(data, LOCATIONS);
   }
 
   @Override
   public List<Entry> getCoordinators() {
-    final String data = storageHandler.readFileData(FileStorageHandler.FILE_COORDINATORS);
+    final String data = storageHandler.readFileData(FileStorageUtils.FILE_COORDINATORS);
     return getEntries(data, COORDINATORS);
   }
 
   @Override
   public List<LocationEntry> getBeneficiaries() {
-    final String data = storageHandler.readFileData(FileStorageHandler.FILE_BENEFICIARIES);
+    final String data = storageHandler.readFileData(FileStorageUtils.FILE_BENEFICIARIES);
     return getLocationEntries(data, BENEFICIARIES);
   }
 
   @Override
   public List<Entry> getModules() {
-    final String data = storageHandler.readFileData(FileStorageHandler.FILE_MODULES);
+    final String data = storageHandler.readFileData(FileStorageUtils.FILE_MODULES);
     return getEntries(data, MODULES);
   }
 

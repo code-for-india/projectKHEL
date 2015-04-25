@@ -1,4 +1,4 @@
-package org.cfi.projectkhel.data.storage;
+package org.cfi.projectkhel.data;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,13 +10,11 @@ import java.util.List;
 
 import android.content.Context;
 
-import org.cfi.projectkhel.data.Attendance;
-
 /**
  * Manages Android Internal storage for all the master data including attendances.
  * Provides read and write functions to manage the data.
  */
-public class FileStorageHandler {
+public class FileStorageUtils {
 
   public static String FILE_MASTER_SYNC = "mastersync.khel";
   public static String FILE_LOCATIONS = "locations.khel";
@@ -26,7 +24,7 @@ public class FileStorageHandler {
   public static String FILE_ATTENDANCE = "attendances.khel";
   private Context context;
 
-  public FileStorageHandler(Context pContext) {
+  public FileStorageUtils(Context pContext) {
     context = pContext;
   }
 
@@ -38,11 +36,9 @@ public class FileStorageHandler {
   public String readFileData(String fileName) {
     final StringBuilder stringBuffer = new StringBuilder();
     try {
-      //Attaching BufferedReader to the FileInputStream by the help of InputStreamReader
       final BufferedReader inputReader = new BufferedReader(new InputStreamReader(
           context.openFileInput(fileName)));
       String inputString;
-      //Reading data line by line and storing it into the stringbuffer
       while ((inputString = inputReader.readLine()) != null) {
         stringBuffer.append(inputString + "\n");
       }
@@ -64,11 +60,9 @@ public class FileStorageHandler {
   public List<String> readFileDataLines(String fileName) {
     final List<String> list = new ArrayList<>();
     try {
-      //Attaching BufferedReader to the FileInputStream by the help of InputStreamReader
       final BufferedReader inputReader = new BufferedReader(new InputStreamReader(
           context.openFileInput(fileName)));
       String inputString;
-      //Reading data line by line and storing it into the stringbuffer
       while ((inputString = inputReader.readLine()) != null) {
         list.add(inputString);
       }

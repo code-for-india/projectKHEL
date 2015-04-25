@@ -24,10 +24,10 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.cfi.projectkhel.data.Attendance;
+import org.cfi.projectkhel.model.Attendance;
 import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.DataUtils;
-import org.cfi.projectkhel.data.Entry;
+import org.cfi.projectkhel.model.Entry;
 
 import static org.cfi.projectkhel.AttendanceConstants.*;
 import java.util.ArrayList;

@@ -1,5 +1,8 @@
 package org.cfi.projectkhel.data;
 
+import org.cfi.projectkhel.model.Entry;
+import org.cfi.projectkhel.model.LocationEntry;
+
 import java.util.List;
 
 public interface DataStorage {

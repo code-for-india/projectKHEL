@@ -1,6 +1,7 @@
 package org.cfi.projectkhel;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,13 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import org.cfi.projectkhel.data.Attendance;
 import org.cfi.projectkhel.data.DataManager;
-import org.cfi.projectkhel.data.storage.FileStorageHandler;
-import org.cfi.projectkhel.rest.MasterDataFetcher;
 
 /**
  * Main Activity of the Application.
@@ -24,8 +21,6 @@ import org.cfi.projectkhel.rest.MasterDataFetcher;
 public class MainActivity extends ActionBarActivity {
 
   static final int MAIN_ACTIVITY = 0x1001;
-  private Button mAttendanceButton;
-  private Button mSyncButton;
   private MasterDataFetcher masterDataFetcher;
 
   @Override
@@ -33,14 +28,12 @@ public class MainActivity extends ActionBarActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mAttendanceButton = (Button) findViewById(R.id.attendanceButton);
-    mSyncButton = (Button) findViewById(R.id.syncButton);
-
     // Get the application instance
     final KhelApplication app = (KhelApplication) getApplication();
-    final FileStorageHandler fileStorageHandler = new FileStorageHandler(this);
-    masterDataFetcher = new MasterDataFetcher(fileStorageHandler);
-    app.setStorageHandler(fileStorageHandler);
+
+    masterDataFetcher = new MasterDataFetcher(this);
+    app.setDataFetcher(masterDataFetcher);
+
     // Not sure if this is the best place to load all data
     DataManager.getInstance().loadAll();
   }
@@ -66,23 +59,25 @@ public class MainActivity extends ActionBarActivity {
 
   public void onSyncClick(View v) {
      if (isConnected()) {
-      masterDataFetcher.pullMasterData();
-      masterDataFetcher.pushOfflineAttendanceData();
-      DataManager.getInstance().loadAll();
+       syncData();
     } else {
       Log.i(AttendanceConstants.TAG, getString(R.string.nonetwork));
       Toast.makeText(this, getString(R.string.nonetwork), Toast.LENGTH_SHORT).show();
     }
   }
 
-  public boolean isConnected() {
+  private boolean isConnected() {
     ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-    if (networkInfo != null && networkInfo.isConnected()) {
-      return true;
-    } else {
-      return false;
-    }
+    return networkInfo != null && networkInfo.isConnected();
+  }
+
+  private void syncData() {
+//    final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Sync in progress ...", true);
+    masterDataFetcher.pullMasterData(true);
+    masterDataFetcher.pushOfflineAttendanceData();
+    DataManager.getInstance().loadAll();
+//    progressDialog.dismiss();
   }
 
   @Override

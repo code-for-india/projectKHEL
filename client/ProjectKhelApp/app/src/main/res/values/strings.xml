@@ -21,6 +21,7 @@
     <string name="submit_attendance">Submit Attendance?</string>
     <string name="ask_submit">Do you want to submit the data?</string>
     <string name="submit_inform">Attendance data submitted</string>
+    <string name="offlinesync">Syncing Offline Attendances</string>
     <string name="reset_confirm">Do you want to reset the data?</string>
     <string name="submit_confirm">Do you want to submit data?</string>
     <string name="reset_attendance">Reset Attendance?</string>

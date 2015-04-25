@@ -5,8 +5,7 @@ import android.app.Application;
 import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.DataStorage;
 import org.cfi.projectkhel.data.storage.LocalStorage;
-import org.cfi.projectkhel.data.storage.FileStorageHandler;
-import org.cfi.projectkhel.rest.MasterDataFetcher;
+import org.cfi.projectkhel.data.FileStorageUtils;
 
 /**
  * Maintains the application wide instances.
@@ -15,22 +14,15 @@ public class KhelApplication extends Application {
 
   private MasterDataFetcher dataFetcher;
 
-  private FileStorageHandler storageHandler;
-
   public MasterDataFetcher getDataFetcher() {
     return dataFetcher;
   }
 
-  public FileStorageHandler getStorageHandler() {
-    return storageHandler;
-  }
-
-  public void setStorageHandler(FileStorageHandler storageHandler) {
-    this.storageHandler = storageHandler;
-    this.dataFetcher = new MasterDataFetcher(storageHandler);
+  public void setDataFetcher(MasterDataFetcher dataFetcher) {
+    this.dataFetcher = dataFetcher;
 
 //    DataStorage storage = new TestDataStorage();
-    final DataStorage storage = new LocalStorage(storageHandler);
+    final DataStorage storage = new LocalStorage(dataFetcher.getStorageHandler());
     DataManager.getInstance().initialize(storage);
   }
 }
