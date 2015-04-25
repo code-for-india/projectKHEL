@@ -74,3 +74,7 @@ INSERT INTO `mastersync` (`id`, `name`, `synctime`) VALUES
 (2, 'modules', 1),
 (3, 'coordinators', 1),
 (4, 'beneficiaries', 1);
+
+
+ALTER TABLE beneficiary
+ADD FOREIGN KEY (location_id) REFERENCES location(id);
