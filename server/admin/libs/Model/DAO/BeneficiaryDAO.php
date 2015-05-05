@@ -30,6 +30,9 @@ class BeneficiaryDAO extends Phreezable
 	/** @var string */
 	public $Name;
 
+  	/** @var string */
+    public $Class;
+  
 	/** @var timestamp */
 	public $CreatedAt;
 

@@ -266,6 +266,7 @@ var page = {
 
 			'locationId': $('input#locationId').val(),
 			'name': $('input#name').val(),
+            'class': $('input#class').val(),
 			'createdAt': $('input#createdAt').val()+' '+$('input#createdAt-time').val()
 		}, {
 			wait: true,

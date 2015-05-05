@@ -37,7 +37,10 @@
 				<th id="header_Id">Id<% if (page.orderBy == 'Id') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_LocationId">Location Id<% if (page.orderBy == 'LocationId') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_Name">Name<% if (page.orderBy == 'Name') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+                <th id="header_Class">Class<% if (page.orderBy == 'Class') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+<!--                
 				<th id="header_CreatedAt">Created At<% if (page.orderBy == 'CreatedAt') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+-->                
 			</tr>
 		</thead>
 		<tbody>
@@ -46,7 +49,10 @@
 				<td><%= _.escape(item.get('id') || '') %></td>
 				<td><%= _.escape(item.get('locationId') || '') %></td>
 				<td><%= _.escape(item.get('name') || '') %></td>
-				<td><%if (item.get('createdAt')) { %><%= _date(app.parseDate(item.get('createdAt'))).format('MMM D, YYYY h:mm A') %><% } else { %>NULL<% } %></td>
+                <td><%= _.escape(item.get('class') || '') %></td>
+<!--                
+                <td><%if (item.get('createdAt')) { %><%= _date(app.parseDate(item.get('createdAt'))).format('MMM D, YYYY h:mm A') %><% } else { %>NULL<% } %></td>
+-->                
 			</tr>
 		<% }); %>
 		</tbody>
@@ -80,6 +86,13 @@
 						<span class="help-inline"></span>
 					</div>
 				</div>
+				<div id="classInputContainer" class="control-group">
+					<label class="control-label" for="class">Class</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="class" placeholder="Class" value="<%= _.escape(item.get('class') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>                
 				<div id="createdAtInputContainer" class="control-group">
 					<label class="control-label" for="createdAt">Created At</label>
 					<div class="controls inline-inputs">

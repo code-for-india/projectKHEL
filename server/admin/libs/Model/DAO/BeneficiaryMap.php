@@ -54,6 +54,7 @@ class BeneficiaryMap implements IDaoMap, IDaoMap2
 			self::$FM["Id"] = new FieldMap("Id","beneficiary","id",true,FM_TYPE_INT,15,null,true);
 			self::$FM["LocationId"] = new FieldMap("LocationId","beneficiary","location_id",false,FM_TYPE_INT,11,null,false);
 			self::$FM["Name"] = new FieldMap("Name","beneficiary","name",false,FM_TYPE_VARCHAR,100,null,false);
+            self::$FM["Class"] = new FieldMap("Class","beneficiary","class",false,FM_TYPE_VARCHAR,10,null,false);
 			self::$FM["CreatedAt"] = new FieldMap("CreatedAt","beneficiary","created_at",false,FM_TYPE_TIMESTAMP,null,"CURRENT_TIMESTAMP",false);
 		}
 		return self::$FM;
