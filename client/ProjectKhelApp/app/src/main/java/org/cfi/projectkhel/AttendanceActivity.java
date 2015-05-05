@@ -222,6 +222,12 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
           public void onClick(DialogInterface dialog, int id) {
             dataRow.setContent(locItems[selectedItem[0]].toString());
             attendance.setLocation(DataUtils.getIdFromSelectedItem(selectedItem[0], locations));
+
+            // Select all beneficiaries by default for this location.
+            final List<Entry> beneficiaries =
+                DataManager.getInstance().getBeneficiariesForLocation(attendance.getLocation());
+            attendance.addBeneficiaries(DataUtils.getAllEntryIds(beneficiaries));
+
             listAdapter.notifyDataSetChanged();
           }
         })

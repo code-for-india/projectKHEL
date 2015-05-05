@@ -22,11 +22,10 @@ public final class DataUtils {
     return data;
   }
 
-  public static Integer [] getEntryIds(List<? extends Entry> entries) {
-    final Integer[] data = new Integer[entries.size()];
-    int i = 0;
+  public static List<Integer> getAllEntryIds(List<? extends Entry> entries) {
+    final List<Integer> data = new ArrayList<>(entries.size() * 2);
     for (Entry e : entries) {
-      data[i++] = e.getId();
+      data.add(e.getId());
     }
     return data;
   }
