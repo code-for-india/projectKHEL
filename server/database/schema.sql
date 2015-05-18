@@ -78,3 +78,13 @@ INSERT INTO `mastersync` (`id`, `name`, `synctime`) VALUES
 
 ALTER TABLE beneficiary
 ADD FOREIGN KEY (location_id) REFERENCES location(id);
+
+-- For Issue #8 - Age, and Sex fields for beneficiaries 
+
+ALTER TABLE `beneficiary` 
+ADD `age` INT( 3 ) NOT NULL DEFAULT 0 AFTER `class` ,
+ADD `sex` CHAR( 1 ) NOT NULL DEFAULT 'M' AFTER `age`;
+
+ALTER TABLE attendance
+ADD FOREIGN KEY (location_id) REFERENCES location(id);
+
