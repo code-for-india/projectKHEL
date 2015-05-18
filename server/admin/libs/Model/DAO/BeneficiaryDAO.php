@@ -33,9 +33,24 @@ class BeneficiaryDAO extends Phreezable
   	/** @var string */
     public $Class;
   
+	/** @var int */
+	public $Age;
+
+	/** @var char */
+	public $Sex;
+
 	/** @var timestamp */
 	public $CreatedAt;
 
+
+	/**
+	 * Returns the foreign object based on the value of LocationId
+	 * @return Location
+	 */
+	public function GetLocation()
+	{
+		return $this->_phreezer->GetManyToOne($this, "beneficiary_ibfk_1");
+	}
 
 
 }

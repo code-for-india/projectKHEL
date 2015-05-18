@@ -38,7 +38,9 @@
 				<th id="header_LocationId">Location Id<% if (page.orderBy == 'LocationId') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_Name">Name<% if (page.orderBy == 'Name') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
                 <th id="header_Class">Class<% if (page.orderBy == 'Class') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
-<!--                
+				<th id="header_Age">Age<% if (page.orderBy == 'Age') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_Sex">Sex<% if (page.orderBy == 'Sex') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+<!--             
 				<th id="header_CreatedAt">Created At<% if (page.orderBy == 'CreatedAt') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 -->                
 			</tr>
@@ -50,6 +52,8 @@
 				<td><%= _.escape(item.get('locationId') || '') %></td>
 				<td><%= _.escape(item.get('name') || '') %></td>
                 <td><%= _.escape(item.get('class') || '') %></td>
+				<td><%= _.escape(item.get('age') || '') %></td>
+				<td><%= _.escape(item.get('sex') || '') %></td>
 <!--                
                 <td><%if (item.get('createdAt')) { %><%= _date(app.parseDate(item.get('createdAt'))).format('MMM D, YYYY h:mm A') %><% } else { %>NULL<% } %></td>
 -->                
@@ -75,7 +79,7 @@
 				<div id="locationIdInputContainer" class="control-group">
 					<label class="control-label" for="locationId">Location Id</label>
 					<div class="controls inline-inputs">
-						<input type="text" class="input-xlarge" id="locationId" placeholder="Location Id" value="<%= _.escape(item.get('locationId') || '') %>">
+						<select id="locationId" name="locationId"></select>
 						<span class="help-inline"></span>
 					</div>
 				</div>
@@ -93,6 +97,20 @@
 						<span class="help-inline"></span>
 					</div>
 				</div>                
+				<div id="ageInputContainer" class="control-group">
+					<label class="control-label" for="age">Age</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="age" placeholder="Age" value="<%= _.escape(item.get('age') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
+				<div id="sexInputContainer" class="control-group">
+					<label class="control-label" for="sex">Sex</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="sex" placeholder="Sex" value="<%= _.escape(item.get('sex') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
 				<div id="createdAtInputContainer" class="control-group">
 					<label class="control-label" for="createdAt">Created At</label>
 					<div class="controls inline-inputs">

@@ -52,7 +52,7 @@ class BeneficiaryController extends AppBaseController
 			// TODO: this will limit results based on all properties included in the filter list 
 			$filter = RequestUtil::Get('filter');
 			if ($filter) $criteria->AddFilter(
-				new CriteriaFilter('Id,LocationId,Name,CreatedAt'
+				new CriteriaFilter('Id,LocationId,Name,Class,Age,Sex,CreatedAt'
 				, '%'.$filter.'%')
 			);
 
@@ -156,7 +156,9 @@ class BeneficiaryController extends AppBaseController
 			$beneficiary->LocationId = $this->SafeGetVal($json, 'locationId');
 			$beneficiary->Name = $this->SafeGetVal($json, 'name');
             $beneficiary->Class = $this->SafeGetVal($json, 'class');
-//			$beneficiary->CreatedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'createdAt')));
+			$beneficiary->Age = $this->SafeGetVal($json, 'age');
+			$beneficiary->Sex = $this->SafeGetVal($json, 'sex');
+			//$beneficiary->CreatedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'createdAt')));
 
 			$beneficiary->Validate();
 			$errors = $beneficiary->GetValidationErrors();
@@ -204,6 +206,8 @@ class BeneficiaryController extends AppBaseController
 			$beneficiary->LocationId = $this->SafeGetVal($json, 'locationId', $beneficiary->LocationId);
 			$beneficiary->Name = $this->SafeGetVal($json, 'name', $beneficiary->Name);          
             $beneficiary->Class = $this->SafeGetVal($json, 'class', $beneficiary->Class);
+			$beneficiary->Age = $this->SafeGetVal($json, 'age', $beneficiary->Age);
+			$beneficiary->Sex = $this->SafeGetVal($json, 'sex', $beneficiary->Sex);
 //			$beneficiary->CreatedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'createdAt', $beneficiary->CreatedAt)));
 
 			$beneficiary->Validate();

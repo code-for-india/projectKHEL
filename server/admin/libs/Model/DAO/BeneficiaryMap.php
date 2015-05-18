@@ -55,6 +55,8 @@ class BeneficiaryMap implements IDaoMap, IDaoMap2
 			self::$FM["LocationId"] = new FieldMap("LocationId","beneficiary","location_id",false,FM_TYPE_INT,11,null,false);
 			self::$FM["Name"] = new FieldMap("Name","beneficiary","name",false,FM_TYPE_VARCHAR,100,null,false);
             self::$FM["Class"] = new FieldMap("Class","beneficiary","class",false,FM_TYPE_VARCHAR,10,null,false);
+			self::$FM["Age"] = new FieldMap("Age","beneficiary","age",false,FM_TYPE_INT,3,null,false);
+			self::$FM["Sex"] = new FieldMap("Sex","beneficiary","sex",false,FM_TYPE_CHAR,1,"M",false);
 			self::$FM["CreatedAt"] = new FieldMap("CreatedAt","beneficiary","created_at",false,FM_TYPE_TIMESTAMP,null,"CURRENT_TIMESTAMP",false);
 		}
 		return self::$FM;
@@ -68,6 +70,7 @@ class BeneficiaryMap implements IDaoMap, IDaoMap2
 		if (self::$KM == null)
 		{
 			self::$KM = Array();
+			self::$KM["beneficiary_ibfk_1"] = new KeyMap("beneficiary_ibfk_1", "LocationId", "Location", "Id", KM_TYPE_MANYTOONE, KM_LOAD_LAZY); // you change to KM_LOAD_EAGER here or (preferrably) make the change in _config.php
 		}
 		return self::$KM;
 	}
