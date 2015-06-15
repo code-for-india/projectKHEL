@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="2dip">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="2dip">
 
-    <TextView android:text="Rate the session"
-          android:id="@+id/rank_dialog_text1"
-          android:textSize="24dp"
-          android:layout_marginTop="10dp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"/>
+    <TextView
+        android:text="@string/rating_session_obj"
+        android:id="@+id/rank_dialog_text1"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="start"/>
 
     <RatingBar
         android:layout_marginTop="10dp"
@@ -19,20 +22,65 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:id="@+id/dialog_ratingbar"
+        android:id="@+id/dialog_ratingbar1"
         android:layout_gravity="center"
         android:numStars="5"
         android:stepSize="1.0"
-        android:rating="2"
+        android:rating="0"
         android:isIndicator="false"/>
 
-    <Button android:id="@+id/rank_dialog_button"
+    <TextView
+        android:text="@string/rating_org_obj"
+        android:id="@+id/rank_dialog_text2"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Update"
+        android:layout_gravity="start"/>
+    <RatingBar
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:id="@+id/dialog_ratingbar2"
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:rating="0"
+        android:isIndicator="false"/>
+
+    <TextView
+        android:text="@string/rating_fun_session"
+        android:id="@+id/rank_dialog_text3"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"/>
+    <RatingBar
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:id="@+id/dialog_ratingbar3"
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:rating="0"
+        android:isIndicator="false"/>
+
+    <Button
+        android:id="@+id/rank_dialog_button"
+        android:layout_height="wrap_content"
+        android:text="@string/rating_update"
         android:focusable="false"
         android:layout_margin="5dip"
         android:textColor="#FFF8C6"
-        android:textSize="20dip"
+        android:textSize="20sp"
         android:layout_width="fill_parent" />
 
 </LinearLayout>

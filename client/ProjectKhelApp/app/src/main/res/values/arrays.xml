@@ -8,6 +8,8 @@
         <item>@string/row_beneficiary</item>
         <item>@string/row_modules</item>
         <item>@string/row_rating</item>
+        <item>@string/row_modeoftransport</item>
+        <item>@string/row_debriefing</item>
         <item>@string/row_comments</item>
     </string-array>
 

@@ -56,13 +56,16 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   private Attendance attendance;
 
-  private static int [] IMAGES = { R.drawable.android_calendar,
-                            R.drawable.android_earth,
-                            R.drawable.android_friends,
-                            R.drawable.android_add_contact,
-                            R.drawable.aperture,
-                            R.drawable.happy,
-                            R.drawable.clipboard};
+  private static int [] IMAGES = {
+      R.drawable.android_calendar,
+      R.drawable.android_earth,
+      R.drawable.android_friends,
+      R.drawable.android_add_contact,
+      R.drawable.aperture,
+      R.drawable.happy,
+      R.drawable.model_s,
+      R.drawable.promotion,
+      R.drawable.clipboard};
 
   private static String [] ATTENDANCE_ELEM_LABELS;
 
@@ -174,8 +177,14 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
       case ROW_COORDINATORS:
         handleCoordinatorsDialog(dataRow);
         break;
+      case ROW_MODEOFTRANSPORT:
+        handleCommentsDialog(dataRow, R.string.transport_title, R.string.transport_hint);
+        break;
+      case ROW_DEFRIEFING:
+        // TODO
+        break;
       case ROW_COMMENTS:
-        handleCommentsDialog(dataRow);
+        handleCommentsDialog(dataRow, R.string.comments_title, R.string.comments_hint);
         break;
       default:
         break;
@@ -375,16 +384,34 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
       ratingDialog.setCancelable(true);
     }
 
-    final RatingBar ratingBar = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar);
-    ratingBar.setRating(attendance.getRating() * 1.0f);
+    final RatingBar ratingBar1 = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar1);
+    ratingBar1.setRating(attendance.getRatingSessionObjectives() * 1.0f);
+
+    final RatingBar ratingBar2 = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar2);
+    ratingBar2.setRating(attendance.getRatingOrgObjectives() * 1.0f);
+
+    final RatingBar ratingBar3 = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar3);
+    ratingBar3.setRating(attendance.getRatingFunForKids() * 1.0f);
 
     final Button updateButton = (Button) ratingDialog.findViewById(R.id.rank_dialog_button);
     updateButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        final int userRankValue = (int) ratingBar.getRating();
-        attendance.setRating(userRankValue);
-        dataRow.setContent(Integer.toString(userRankValue));
+        int totalRating = 0;
+        int userRankValue = (int) ratingBar1.getRating();
+        attendance.setRatingSessionObjectives(userRankValue);
+        totalRating += userRankValue;
+
+        userRankValue = (int) ratingBar2.getRating();
+        attendance.setRatingOrgObjectives(userRankValue);
+        totalRating += userRankValue;
+
+        userRankValue = (int) ratingBar3.getRating();
+        attendance.setRatingFunForKids(userRankValue);
+        totalRating += userRankValue;
+
+        // Set the Average rating
+        dataRow.setContent(String.format("%.1f", (float)totalRating/3));
         listAdapter.notifyDataSetChanged();
         ratingDialog.dismiss();
       }
@@ -393,19 +420,23 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     ratingDialog.show();
   }
 
-  private void handleCommentsDialog(final MyCustomData dataRow) {
-    final EditText commentsTxt = new EditText(this);
-    commentsTxt.setHint(getString(R.string.comments_hint));
-    commentsTxt.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+  private void handleCommentsDialog(final MyCustomData dataRow, final int titleResId, final int hintResId) {
+    final EditText editText = new EditText(this);
+    editText.setHint(getString(hintResId));
+    editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
     new AlertDialog.Builder(this)
-        .setTitle(getString(R.string.comments_title))
-        .setView(commentsTxt)
+        .setTitle(getString(titleResId))
+        .setView(editText)
         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
-            final String comment = commentsTxt.getText().toString();
+            final String comment = editText.getText().toString();
             dataRow.setContent(shortenIt(comment));
-            attendance.setComments(comment);
+            if (titleResId == R.string.comments_title) {
+              attendance.setComments(comment);
+            } else {
+              attendance.setModeOfTransport(comment);
+            }
             listAdapter.notifyDataSetChanged();
           }
         })

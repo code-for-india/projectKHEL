@@ -14,9 +14,16 @@
     <string name="row_beneficiary">Beneficiary</string>
     <string name="row_modules">Modules</string>
     <string name="row_rating">Rating</string>
+    <string name="row_modeoftransport">Mode of Transport</string>
+    <string name="row_debriefing">Debriefing</string>
     <string name="row_comments">Comments</string>
 
-    <string name="nomastersync">Master data missing. Doing Sync...</string>
+    <string name="rating_session_obj">Session\'s Objectives</string>
+    <string name="rating_org_obj">Organization\'s Objectives</string>
+    <string name="rating_fun_session">Fun session for the kids</string>
+    <string name="rating_update">Update</string>
+
+    <string name="nomastersync">Master data missing. Doing Sync..</string>
     <string name="nonetwork">No connection. Check network connectivity</string>
     <string name="submit_attendance">Submit Attendance?</string>
     <string name="ask_submit">Do you want to submit the data?</string>
@@ -30,7 +37,10 @@
     <string name="mod_dialog_title">Pick Modules</string>
     <string name="benef_dialog_title">Pick Beneficiaries</string>
     <string name="benef_location_select">Please select a location first</string>
+
     <string name="comments_title">Enter Comments</string>
     <string name="comments_hint">How did the session go?</string>
 
+    <string name="transport_title">Mode of transport</string>
+    <string name="transport_hint"></string>
 </resources>

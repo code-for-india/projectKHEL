@@ -17,8 +17,18 @@ public class Attendance {
   private List<Integer> modules;
   private List<Integer> beneficiaries;
   private String comments;
-  private int rating;
+//  private int rating;
   private String userId;
+  // New mode of transport
+  private String modeOfTransport;
+  // New debriefing
+  private String debriefWhatWorked;
+  private String debriefToImprove;
+  private String debriefDidntWork;
+  // New ratings
+  private int ratingSessionObjectives;
+  private int ratingOrgObjectives;
+  private int ratingFunForKids;
 
   private Attendance() {
     coordinators = new ArrayList<>();
@@ -63,13 +73,13 @@ public class Attendance {
     this.comments = comments;
   }
 
-  public int getRating() {
-    return rating;
-  }
-
-  public void setRating(int rating) {
-    this.rating = rating;
-  }
+//  public int getRating() {
+//    return rating;
+//  }
+//
+//  public void setRating(int rating) {
+//    this.rating = rating;
+//  }
 
   public void addCoordinator(int coordinatorId) {
     coordinators.add(coordinatorId);
@@ -108,7 +118,64 @@ public class Attendance {
   public List<Integer> getBeneficiaries() {
     return beneficiaries;
   }
-  /*
+
+  public int getRatingFunForKids() {
+    return ratingFunForKids;
+  }
+
+  public void setRatingFunForKids(int ratingFunForKids) {
+    this.ratingFunForKids = ratingFunForKids;
+  }
+
+  public String getModeOfTransport() {
+    return modeOfTransport;
+  }
+
+  public void setModeOfTransport(String modeOfTransport) {
+    this.modeOfTransport = modeOfTransport;
+  }
+
+  public String getDebriefWhatWorked() {
+    return debriefWhatWorked;
+  }
+
+  public void setDebriefWhatWorked(String debriefWhatWorked) {
+    this.debriefWhatWorked = debriefWhatWorked;
+  }
+
+  public String getDebriefToImprove() {
+    return debriefToImprove;
+  }
+
+  public void setDebriefToImprove(String debriefToImprove) {
+    this.debriefToImprove = debriefToImprove;
+  }
+
+  public String getDebriefDidntWork() {
+    return debriefDidntWork;
+  }
+
+  public void setDebriefDidntWork(String debriefDidntWork) {
+    this.debriefDidntWork = debriefDidntWork;
+  }
+
+  public int getRatingSessionObjectives() {
+    return ratingSessionObjectives;
+  }
+
+  public void setRatingSessionObjectives(int ratingSessionObjectives) {
+    this.ratingSessionObjectives = ratingSessionObjectives;
+  }
+
+  public int getRatingOrgObjectives() {
+    return ratingOrgObjectives;
+  }
+
+  public void setRatingOrgObjectives(int ratingOrgObjectives) {
+    this.ratingOrgObjectives = ratingOrgObjectives;
+  }
+
+  /**
    * Convert in the following form
     {
         "date": "2014-02-19",
@@ -120,7 +187,7 @@ public class Attendance {
         "rating": 8,
         "userid": "james"
     }
- */
+  */
   public String toJSON() {
     final JSONObject jsonObj = new JSONObject();
     try {
@@ -130,8 +197,16 @@ public class Attendance {
       jsonObj.put("modules", listToCSV(modules));
       jsonObj.put("beneficiaries", listToCSV(beneficiaries));
       jsonObj.put("comments", comments);
-      jsonObj.put("rating", rating);
+//      jsonObj.put("rating", rating);
       jsonObj.put("userid", userId);
+      jsonObj.put("modeoftransport", modeOfTransport);
+      jsonObj.put("debriefwhatworked", debriefWhatWorked);
+      jsonObj.put("debrieftoimprove", debriefToImprove);
+      jsonObj.put("debriefdidntwork", debriefDidntWork);
+      jsonObj.put("ratingsessionobjectives", ratingSessionObjectives);
+      jsonObj.put("ratingorgobjectives", ratingOrgObjectives);
+      jsonObj.put("ratingfunforkids", ratingFunForKids);
+
     } catch (JSONException e) {
       // TODO - Handle this exception
       e.printStackTrace();
@@ -148,8 +223,14 @@ public class Attendance {
         ", modules=" + modules +
         ", beneficiaries=" + beneficiaries +
         ", comments='" + comments + '\'' +
-        ", rating=" + rating +
         ", userId='" + userId + '\'' +
+        ", modeOfTransport='" + modeOfTransport + '\'' +
+        ", debriefWhatWorked='" + debriefWhatWorked + '\'' +
+        ", debriefToImprove='" + debriefToImprove + '\'' +
+        ", debriefDidntWork='" + debriefDidntWork + '\'' +
+        ", ratingSessionObjectives=" + ratingSessionObjectives +
+        ", ratingOrgObjectives=" + ratingOrgObjectives +
+        ", ratingFunForKids=" + ratingFunForKids +
         '}';
   }
 
@@ -170,7 +251,6 @@ public class Attendance {
     at1.addModule(8);at1.addModule(228);at1.addModule(972);
     at1.addBeneficiary(33);at1.addBeneficiary(44);at1.addBeneficiary(55);at1.addBeneficiary(66);
     at1.setComments("Great Event");
-    at1.setRating(9);
 
     System.out.println(at1);
     //System.out.println(at1.toJSON());
