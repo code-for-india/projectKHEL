@@ -2,11 +2,10 @@ package org.cfi.projectkhel;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,12 +22,13 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.cfi.projectkhel.model.Attendance;
+
 import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.DataUtils;
+import org.cfi.projectkhel.model.Attendance;
 import org.cfi.projectkhel.model.Entry;
-
 import static org.cfi.projectkhel.AttendanceConstants.*;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,14 +39,12 @@ import java.util.List;
  * TODO:
  * 1. Move all hardcoded strings into resource file.
  * 2. Generalize Dialog handling based on type (single-select, multi-select)
- * 3. Optimize DataManager calls - Done
  */
 public class AttendanceActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
 
-  private ListView mainList;
-  private Dialog ratingDialog;
   private final int SHORTEN_LEN = 15;
 
+  private ListView mainList;
   private MyCustomListAdapter listAdapter;
   private List<MyCustomData> mData = new ArrayList<>();
   private int mYear;
@@ -90,7 +87,9 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     // TODO: Fetch the logged in user.
     attendance = new Attendance("TODO");
 
-    populateListContents();
+    for (int i = 0; i < ATTENDANCE_ELEM_LABELS.length; i++) {
+      mData.add(new MyCustomData(IMAGES[i], ATTENDANCE_ELEM_LABELS[i], ""));
+    }
 
     final Calendar c = Calendar.getInstance();
     mYear = c.get(Calendar.YEAR);
@@ -139,19 +138,19 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   public void onResetClick(View v) {
     new AlertDialog.Builder(this)
-        .setTitle(getString(R.string.reset_attendance))
-        .setMessage(getString(R.string.reset_confirm))
-        .setIcon(android.R.drawable.ic_menu_compass)
-        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+      .setTitle(getString(R.string.reset_attendance))
+      .setMessage(getString(R.string.reset_confirm))
+      .setIcon(android.R.drawable.ic_menu_close_clear_cancel)
+      .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-          public void onClick(DialogInterface dialog, int whichButton) {
-            for (MyCustomData data : mData) {
-              data.setContent("");
-            }
-            attendance = attendance.clone();
-            listAdapter.notifyDataSetChanged();
-          }})
-        .setNegativeButton(android.R.string.no, null).show();
+        public void onClick(DialogInterface dialog, int whichButton) {
+          for (MyCustomData data : mData) {
+            data.setContent("");
+          }
+          attendance = attendance.clone();
+          listAdapter.notifyDataSetChanged();
+        }})
+      .setNegativeButton(android.R.string.no, null).show();
   }
 
   @Override
@@ -181,7 +180,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
         handleCommentsDialog(dataRow, R.string.transport_title, R.string.transport_hint);
         break;
       case ROW_DEFRIEFING:
-        // TODO
+        handleDebriefingDialog(dataRow);
         break;
       case ROW_COMMENTS:
         handleCommentsDialog(dataRow, R.string.comments_title, R.string.comments_hint);
@@ -219,7 +218,8 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.location_dialog_title))
-        . setSingleChoiceItems(locItems, checkItem,
+        .setIcon(android.R.drawable.ic_dialog_map)
+        .setSingleChoiceItems(locItems, checkItem,
             new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
@@ -260,6 +260,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.coor_dialog_title))
+        .setIcon(android.R.drawable.ic_dialog_map)
         .setMultiChoiceItems(coordinatorNames, checkItems,
             new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -300,6 +301,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.mod_dialog_title))
+        .setIcon(android.R.drawable.ic_dialog_map)
         .setMultiChoiceItems(DataUtils.getEntryNames(modules), checkItems,
             new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -345,6 +347,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.benef_dialog_title))
+        .setIcon(android.R.drawable.ic_dialog_map)
         .setMultiChoiceItems(beneficiaryNames, checkItems,
             new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -376,48 +379,49 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     builder.show();
   }
 
-
   private void handleRatingDialog(final MyCustomData dataRow) {
-    if (ratingDialog == null) {
-      ratingDialog = new Dialog(AttendanceActivity.this, R.style.NoTitleDialog);
-      ratingDialog.setContentView(R.layout.rating_dialog);
-      ratingDialog.setCancelable(true);
-    }
+    // Pass null as the parent view because its going in the dialog layout
+    View ratingView = this.getLayoutInflater().inflate(R.layout.rating_dialog, null);
 
-    final RatingBar ratingBar1 = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar1);
+    final RatingBar ratingBar1 = (RatingBar)ratingView.findViewById(R.id.dialog_ratingbar1);
+    final RatingBar ratingBar2 = (RatingBar)ratingView.findViewById(R.id.dialog_ratingbar2);
+    final RatingBar ratingBar3 = (RatingBar)ratingView.findViewById(R.id.dialog_ratingbar3);
+
+    // Set Initial values
     ratingBar1.setRating(attendance.getRatingSessionObjectives() * 1.0f);
-
-    final RatingBar ratingBar2 = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar2);
     ratingBar2.setRating(attendance.getRatingOrgObjectives() * 1.0f);
-
-    final RatingBar ratingBar3 = (RatingBar)ratingDialog.findViewById(R.id.dialog_ratingbar3);
     ratingBar3.setRating(attendance.getRatingFunForKids() * 1.0f);
 
-    final Button updateButton = (Button) ratingDialog.findViewById(R.id.rank_dialog_button);
-    updateButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        int totalRating = 0;
-        int userRankValue = (int) ratingBar1.getRating();
-        attendance.setRatingSessionObjectives(userRankValue);
-        totalRating += userRankValue;
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setView(ratingView)
+      .setTitle(R.string.dialog_rating)
+      .setIcon(android.R.drawable.ic_dialog_map)
+      .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+          int totalRating = 0;
+          int userRankValue = (int) ratingBar1.getRating();
+          attendance.setRatingSessionObjectives(userRankValue);
+          totalRating += userRankValue;
 
-        userRankValue = (int) ratingBar2.getRating();
-        attendance.setRatingOrgObjectives(userRankValue);
-        totalRating += userRankValue;
+          userRankValue = (int) ratingBar2.getRating();
+          attendance.setRatingOrgObjectives(userRankValue);
+          totalRating += userRankValue;
 
-        userRankValue = (int) ratingBar3.getRating();
-        attendance.setRatingFunForKids(userRankValue);
-        totalRating += userRankValue;
+          userRankValue = (int) ratingBar3.getRating();
+          attendance.setRatingFunForKids(userRankValue);
+          totalRating += userRankValue;
 
-        // Set the Average rating
-        dataRow.setContent(String.format("%.1f", (float)totalRating/3));
-        listAdapter.notifyDataSetChanged();
-        ratingDialog.dismiss();
-      }
-    });
-    //now that the dialog is set up, it's time to show it
-    ratingDialog.show();
+          // Set the Average rating
+          dataRow.setContent(String.format("%.1f", (float)totalRating/3));
+          // Update view
+          listAdapter.notifyDataSetChanged();
+        }
+      })
+      .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+        }
+      });
+    builder.show();
   }
 
   private void handleCommentsDialog(final MyCustomData dataRow, final int titleResId, final int hintResId) {
@@ -425,26 +429,71 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     editText.setHint(getString(hintResId));
     editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
+    String prevData;
+    if (titleResId == R.string.comments_title) {
+      prevData = attendance.getComments();
+    } else {
+      prevData = attendance.getModeOfTransport();
+    }
+    editText.setText(prevData);
+
     new AlertDialog.Builder(this)
-        .setTitle(getString(titleResId))
-        .setView(editText)
-        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-            final String comment = editText.getText().toString();
-            dataRow.setContent(shortenIt(comment));
-            if (titleResId == R.string.comments_title) {
-              attendance.setComments(comment);
-            } else {
-              attendance.setModeOfTransport(comment);
-            }
-            listAdapter.notifyDataSetChanged();
+      .setTitle(getString(titleResId))
+      .setView(editText)
+      .setIcon(android.R.drawable.ic_dialog_map)
+      .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+          final String comment = editText.getText().toString();
+          dataRow.setContent(shortenIt(comment));
+          if (titleResId == R.string.comments_title) {
+            attendance.setComments(comment);
+          } else {
+            attendance.setModeOfTransport(comment);
           }
-        })
-        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-          }
-        })
-        .show();
+          listAdapter.notifyDataSetChanged();
+        }
+      })
+      .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+        }
+      })
+      .show();
+  }
+
+  /**
+   * Custom dialog for Debriefing.
+   */
+  private void handleDebriefingDialog(final MyCustomData dataRow) {
+    // Pass null as the parent view because its going in the dialog layout
+    View view = this.getLayoutInflater().inflate(R.layout.debriefing_dialog, null);
+    final EditText defriefWk = (EditText) view.findViewById(R.id.debrief_work);
+    final EditText defriefImpr = (EditText) view.findViewById(R.id.debrief_impr);
+    final EditText defriefDidntWk = (EditText) view.findViewById(R.id.debrief_didntwork);
+
+    defriefWk.setText(attendance.getDebriefWhatWorked());
+    defriefImpr.setText(attendance.getDebriefToImprove());
+    defriefDidntWk.setText(attendance.getDebriefDidntWork());
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setView(view)
+      .setTitle(R.string.dialog_debrief)
+      .setIcon(android.R.drawable.ic_dialog_map)
+      .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+          dataRow.setContent(shortenIt(defriefWk.getText().toString()));
+
+          attendance.setDebriefWhatWorked(defriefWk.getText().toString());
+          attendance.setDebriefToImprove(defriefImpr.getText().toString());
+          attendance.setDebriefDidntWork(defriefDidntWk.getText().toString());
+          // Update view
+          listAdapter.notifyDataSetChanged();
+        }
+      })
+      .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+        }
+      });
+    builder.show();
   }
 
   /**
@@ -516,12 +565,6 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     }
   }
 
-  private void populateListContents() {
-    for (int i = 0; i < ATTENDANCE_ELEM_LABELS.length; i++) {
-      mData.add(new MyCustomData(IMAGES[i], ATTENDANCE_ELEM_LABELS[i], ""));
-    }
-  }
-
   /**
    * Custom Data class to store the individual row values.
    */
@@ -540,6 +583,9 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
       content = myContent;
     }
 
+    public String getContent() {
+      return content;
+    }
   }
 
   private String shortenIt(String data) {

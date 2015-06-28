@@ -73,14 +73,4 @@
         android:rating="0"
         android:isIndicator="false"/>
 
-    <Button
-        android:id="@+id/rank_dialog_button"
-        android:layout_height="wrap_content"
-        android:text="@string/rating_update"
-        android:focusable="false"
-        android:layout_margin="5dip"
-        android:textColor="#FFF8C6"
-        android:textSize="20sp"
-        android:layout_width="fill_parent" />
-
 </LinearLayout>

@@ -41,5 +41,26 @@
         android:layout_below="@id/attendanceButton"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/lastsynced"
+        android:id="@+id/lastSyncLblTextView"
+        android:layout_below="@+id/syncButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="83dp"
+        style="@style/list_data"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/lastSyncTextView"
+        android:layout_below="@+id/lastSyncLblTextView"
+        style="@style/list_data"
+        android:layout_centerHorizontal="true"/>
+
 
 </RelativeLayout>

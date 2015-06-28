@@ -18,6 +18,7 @@
     <string name="row_debriefing">Debriefing</string>
     <string name="row_comments">Comments</string>
 
+    <string name="dialog_rating">Rating</string>
     <string name="rating_session_obj">Session\'s Objectives</string>
     <string name="rating_org_obj">Organization\'s Objectives</string>
     <string name="rating_fun_session">Fun session for the kids</string>
@@ -43,4 +44,12 @@
 
     <string name="transport_title">Mode of transport</string>
     <string name="transport_hint"></string>
+
+    <string name="dialog_debrief">Debriefing</string>
+    <string name="debrief_1">What worked?</string>
+    <string name="debrief_2">What can be improved?</string>
+    <string name="debrief_3">What didn\'t work?</string>
+
+    <string name="lastsynced">Last synced on</string>
+    <string name="lastsynckey">app.last.sync</string>
 </resources>

@@ -63,7 +63,7 @@ public final class DataUtils {
     for (Entry entry : entryList) {
       int myId = entry.getId();
       // Check if in selected list
-      Log.d(AttendanceConstants.TAG, "Checking for " + myId);
+      //Log.d(AttendanceConstants.TAG, "Checking for " + myId);
       data[i++] = selectedIds.contains(myId);
     }
 //    Log.d(AttendanceConstants.TAG, "AttendanceIds: " + selectedIds);

@@ -2,18 +2,27 @@ package org.cfi.projectkhel;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.cfi.projectkhel.data.DataManager;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Main Activity of the Application.
@@ -22,6 +31,8 @@ public class MainActivity extends ActionBarActivity {
 
   static final int MAIN_ACTIVITY = 0x1001;
   private MasterDataFetcher masterDataFetcher;
+  private TextView lastSyncTime;
+  private SharedPreferences sharedPref;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,9 @@ public class MainActivity extends ActionBarActivity {
     masterDataFetcher = new MasterDataFetcher(this);
     app.setDataFetcher(masterDataFetcher);
 
+    sharedPref = getPreferences(Context.MODE_PRIVATE);
+    lastSyncTime = (TextView) findViewById(R.id.lastSyncTextView);
+    lastSyncTime.setText(sharedPref.getString(getString(R.string.lastsynckey), ""));
     // Not sure if this is the best place to load all data
     DataManager.getInstance().loadAll();
   }
@@ -78,6 +92,12 @@ public class MainActivity extends ActionBarActivity {
     masterDataFetcher.pushOfflineAttendanceData();
     DataManager.getInstance().loadAll();
 //    progressDialog.dismiss();
+    SharedPreferences.Editor editor = sharedPref.edit();
+    DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm:ss");
+    String date = df.format(Calendar.getInstance().getTime());
+
+    editor.putString(getString(R.string.lastsynckey), date);
+    editor.commit();
   }
 
   @Override
