@@ -31,7 +31,9 @@ import static org.cfi.projectkhel.AttendanceConstants.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Attendance Activity
@@ -343,7 +345,8 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     boolean[] checkItems = DataUtils.getSelectedItemsFromIds(attendance.getBeneficiaries(), beneficiaries);
 
     // List where we track the selected items
-    final List<Integer> selectedItems = DataUtils.getSelectedItemsFromBoolList(checkItems);
+    final Set<Integer> selectedItems = new HashSet<>();
+    selectedItems.addAll(DataUtils.getSelectedItemsFromBoolList(checkItems));
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.benef_dialog_title))

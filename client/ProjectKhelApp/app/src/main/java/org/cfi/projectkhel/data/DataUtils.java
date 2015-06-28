@@ -7,6 +7,7 @@ import org.cfi.projectkhel.model.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Helper class to set selected entries.
@@ -42,6 +43,14 @@ public final class DataUtils {
     }
 //    Log.d(AttendanceConstants.TAG, "Selected: " + selectedItems);
 //    Log.d(AttendanceConstants.TAG, "Now AttendanceIDs: " + data);
+    return data;
+  }
+
+  public static List<Integer> getIdsFromSelectedItems(Set<Integer> selectedItems, List<? extends Entry> entryList) {
+    final List<Integer> data = new ArrayList<>(selectedItems.size() * 2);
+    for (Integer id : selectedItems) {
+      data.add(entryList.get(id).getId());
+    }
     return data;
   }
 

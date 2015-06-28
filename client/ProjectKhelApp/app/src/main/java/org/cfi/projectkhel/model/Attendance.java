@@ -112,6 +112,7 @@ public class Attendance {
   }
 
   public void addBeneficiaries(List<Integer> beneficiaryList) {
+    beneficiaries.clear();
     beneficiaries.addAll(beneficiaryList);
   }
 

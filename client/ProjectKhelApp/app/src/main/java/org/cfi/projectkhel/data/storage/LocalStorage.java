@@ -59,6 +59,7 @@ public class LocalStorage implements DataStorage {
    */
   private List<Entry> getEntries(String fileData, String rootNode) {
     Log.d(AttendanceConstants.TAG, "Getting entries for " + rootNode);
+//    Log.d(AttendanceConstants.TAG, "Data:: " + fileData);
     final List<Entry> entries = new ArrayList<>();
     try {
       final JSONObject json = new JSONObject(new JSONTokener(fileData));
@@ -81,6 +82,7 @@ public class LocalStorage implements DataStorage {
    * @return List format
    */
   private List<LocationEntry> getLocationEntries(String fileData, String rootNode) {
+//    Log.d(AttendanceConstants.TAG, "Data:: " + fileData);
     final List<LocationEntry> entries = new ArrayList<>();
     try {
       final JSONObject json = new JSONObject(new JSONTokener(fileData));
@@ -88,11 +90,24 @@ public class LocalStorage implements DataStorage {
       for (int i = 0; i < arr.length(); i++) {
         final JSONObject jsonEntry = 	arr.getJSONObject(i);
         entries.add(LocationEntry.newEntry(jsonEntry.getInt("id"),
-              jsonEntry.getString("name"), jsonEntry.getInt("location_id")));
+                    getBeneficiaryNameTag(jsonEntry),
+                    jsonEntry.getInt("location_id")));
       }
     } catch (JSONException e) {
       e.printStackTrace();
     }
     return entries;
+  }
+
+  private String getBeneficiaryNameTag(final JSONObject jsonEntry) {
+    final StringBuilder sb = new StringBuilder();
+    sb.append(jsonEntry.optString("name"));
+    sb.append(" ");
+    sb.append(jsonEntry.optString("class", ""));
+    sb.append(" ");
+    sb.append(jsonEntry.optString("age", ""));
+    sb.append(" ");
+    sb.append(jsonEntry.optString("sex", ""));
+    return sb.toString();
   }
 }
