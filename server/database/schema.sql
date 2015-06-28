@@ -82,9 +82,29 @@ ADD FOREIGN KEY (location_id) REFERENCES location(id);
 -- For Issue #8 - Age, and Sex fields for beneficiaries 
 
 ALTER TABLE `beneficiary` 
+ADD `class`	varchar(10) NULL AFTER `name`,
 ADD `age` INT( 3 ) NOT NULL DEFAULT 0 AFTER `class` ,
 ADD `sex` CHAR( 1 ) NOT NULL DEFAULT 'M' AFTER `age`;
 
 ALTER TABLE attendance
 ADD FOREIGN KEY (location_id) REFERENCES location(id);
+
+ALTER TABLE attendance
+ADD `modeoftransport` `mode_of_transport` VARCHAR( 50 ) NULL,
+ADD `ratingorgobjectives` `rating_org_objectives` INT( 2 ) NULL DEFAULT '5' ,
+ADD `ratingfunforkids` `rating_funforkids` INT( 2 ) NULL DEFAULT '5',
+ADD `debriefwhatworked` `debrief_what_worked` varchar(100) NULL,
+ADD `debrieftoimprove` `debrief_to_improve` varchar(100) NULL,
+ADD `debriefdidntwork` `debrief_didnt_work` varchar(100) NULL;
+
+ALTER TABLE attendance
+CHANGE `rating` `rating` INT( 2 ) NULL DEFAULT '5',
+CHANGE `comment` `comment` VARCHAR( 500 ) NULL,   
+CHANGE `rating` `ratingSessionObjectives` INT( 2 ) NULL DEFAULT '5';
+  
+ALTER TABLE `beneficiary` 
+CHANGE `age` `age` INT( 3 ) NULL DEFAULT '0',
+CHANGE `sex` `sex` CHAR( 1 ) NULL DEFAULT 'M';
+
+
 

@@ -78,7 +78,12 @@ function getLocation($id) {
 function addAttendance() {
   $request = Slim::getInstance()->request();
   $data = json_decode($request->getBody());
-  $sql = "INSERT INTO attendance (held_on, location_id, coordinators, modules, beneficiaries, comment, rating, user_submitted) VALUES (:held_on, :location_id, :coordinators, :modules, :beneficiaries, :comment, :rating, :user_submitted)";
+  $sql = "INSERT INTO attendance (held_on, location_id, coordinators, modules, beneficiaries, comment, user_submitted, " .
+    "rating_session_objectives, rating_org_objectives, rating_funforkids, mode_of_transport,  " .
+    "debrief_what_worked, debrief_to_improve, debrief_didnt_work) " .
+    "VALUES (:held_on, :location_id, :coordinators, :modules, :beneficiaries, :comment, :user_submitted, " .
+    ":rating_session, :rating_org, :rating_kids, :mode_transport, :debrief_wk, :debrief_impr, :debrief_nowork )";
+  
   try {
     $db = getConnection();
     $stmt = $db->prepare($sql);  
@@ -88,8 +93,16 @@ function addAttendance() {
     $stmt->bindParam("modules", $data->modules);
     $stmt->bindParam("beneficiaries", $data->beneficiaries);
     $stmt->bindParam("comment", $data->comments);
-    $stmt->bindParam("rating", $data->rating);
     $stmt->bindParam("user_submitted", $data->userid);      
+    $stmt->bindParam("rating_session", $data->ratingsessionobjectives);
+    $stmt->bindParam("rating_org", $data->ratingorgobjectives);
+    $stmt->bindParam("rating_kids", $data->ratingfunforkids);
+    $stmt->bindParam("mode_transport", $data->modeoftransport);
+    $stmt->bindParam("debrief_wk", $data->debriefwhatworked);
+    $stmt->bindParam("debrief_impr", $data->debrieftoimprove);
+    $stmt->bindParam("debrief_nowork", $data->debriefdidntwork);
+    
+    
     $stmt->execute();
     $data->id = $db->lastInsertId();
     $db = null;
@@ -157,7 +170,7 @@ function getCoordinator($id) {
 }
 
 function getBeneficiaries() {
-  $sql = "SELECT id, name, location_id FROM beneficiary ORDER BY location_id";
+  $sql = "SELECT id, name, location_id, class, age, sex FROM beneficiary ORDER BY location_id";
   try {
     $db = getConnection();
     $stmt = $db->prepare($sql);  
@@ -171,7 +184,7 @@ function getBeneficiaries() {
 }
 
 function getBeneficiariesForLocation($locid) {
-  $sql = "SELECT id, name FROM beneficiary WHERE location_id=:locnid";
+  $sql = "SELECT id, name, class, age, sex FROM beneficiary WHERE location_id=:locnid";
   try {
     $db = getConnection();
     $stmt = $db->prepare($sql);  
