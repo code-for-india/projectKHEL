@@ -29,10 +29,16 @@ class AttendanceReporter extends Reporter
 	public $Modules;
 	public $Beneficiaries;
 	public $Comment;
-	public $Rating;
+	public $RatingSessionObjectives;
 	public $CreatedAt;
 	public $ModifiedAt;
 	public $UserSubmitted;
+	public $ModeOfTransport;
+	public $DebriefWhatWorked;
+	public $DebriefToImprove;
+	public $DebriefDidntWork;
+	public $RatingOrgObjectives;
+	public $RatingFunforkids;
 
 	/*
 	* GetCustomQuery returns a fully formed SQL statement.  The result columns
@@ -53,10 +59,16 @@ class AttendanceReporter extends Reporter
 			,`attendance`.`modules` as Modules
 			,`attendance`.`beneficiaries` as Beneficiaries
 			,`attendance`.`comment` as Comment
-			,`attendance`.`rating` as Rating
+			,`attendance`.`rating_session_objectives` as RatingSessionObjectives
 			,`attendance`.`created_at` as CreatedAt
 			,`attendance`.`modified_at` as ModifiedAt
 			,`attendance`.`user_submitted` as UserSubmitted
+			,`attendance`.`mode_of_transport` as ModeOfTransport
+			,`attendance`.`debrief_what_worked` as DebriefWhatWorked
+			,`attendance`.`debrief_to_improve` as DebriefToImprove
+			,`attendance`.`debrief_didnt_work` as DebriefDidntWork
+			,`attendance`.`rating_org_objectives` as RatingOrgObjectives
+			,`attendance`.`rating_funforkids` as RatingFunforkids
 		from `attendance`";
 
 		// the criteria can be used or you can write your own custom logic.

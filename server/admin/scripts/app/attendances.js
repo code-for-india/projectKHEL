@@ -223,6 +223,32 @@ var page = {
 		
 		$('.timepicker-default').timepicker({ defaultTime: 'value' });
 
+		// populate the dropdown options for locationId
+		// TODO: load only the selected value, then fetch all options when the drop-down is clicked
+		var locationIdValues = new model.LocationCollection();
+		locationIdValues.fetch({
+			success: function(c){
+				var dd = $('#locationId');
+				dd.append('<option value=""></option>');
+				c.forEach(function(item,index) {
+					dd.append(app.getOptionHtml(
+						item.get('id'),
+						item.get('name'), // TODO: change fieldname if the dropdown doesn't show the desired column
+						page.attendance.get('locationId') == item.get('id')
+					));
+				});
+				
+				if (!app.browserSucks()) {
+					dd.combobox();
+					$('div.combobox-container + span.help-inline').hide(); // TODO: hack because combobox is making the inline help div have a height
+				}
+
+			},
+			error: function(collection,response,scope) {
+				app.appendAlert(app.getErrorMessage(response), 'alert-error',0,'modelAlert');
+			}
+		});
+
 
 		if (showDeleteButton) {
 			// attach click handlers to the delete buttons
@@ -265,15 +291,21 @@ var page = {
 		page.attendance.save({
 
 			'heldOn': $('input#heldOn').val(),
-			'locationId': $('input#locationId').val(),
+			'locationId': $('select#locationId').val(),
 			'coordinators': $('input#coordinators').val(),
 			'modules': $('input#modules').val(),
 			'beneficiaries': $('input#beneficiaries').val(),
 			'comment': $('input#comment').val(),
-			'rating': $('input#rating').val(),
+			'ratingSessionObjectives': $('input#ratingSessionObjectives').val(),
 			'createdAt': $('input#createdAt').val()+' '+$('input#createdAt-time').val(),
 			'modifiedAt': $('input#modifiedAt').val()+' '+$('input#modifiedAt-time').val(),
-			'userSubmitted': $('input#userSubmitted').val()
+			'userSubmitted': $('input#userSubmitted').val(),
+			'modeOfTransport': $('input#modeOfTransport').val(),
+			'debriefWhatWorked': $('input#debriefWhatWorked').val(),
+			'debriefToImprove': $('input#debriefToImprove').val(),
+			'debriefDidntWork': $('input#debriefDidntWork').val(),
+			'ratingOrgObjectives': $('input#ratingOrgObjectives').val(),
+			'ratingFunforkids': $('input#ratingFunforkids').val()
 		}, {
 			wait: true,
 			success: function(){

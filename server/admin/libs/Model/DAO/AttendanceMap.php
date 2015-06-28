@@ -58,10 +58,16 @@ class AttendanceMap implements IDaoMap, IDaoMap2
 			self::$FM["Modules"] = new FieldMap("Modules","attendance","modules",false,FM_TYPE_VARCHAR,255,null,false);
 			self::$FM["Beneficiaries"] = new FieldMap("Beneficiaries","attendance","beneficiaries",false,FM_TYPE_VARCHAR,1000,null,false);
 			self::$FM["Comment"] = new FieldMap("Comment","attendance","comment",false,FM_TYPE_VARCHAR,500,null,false);
-			self::$FM["Rating"] = new FieldMap("Rating","attendance","rating",false,FM_TYPE_INT,2,"5",false);
+			self::$FM["RatingSessionObjectives"] = new FieldMap("RatingSessionObjectives","attendance","rating_session_objectives",false,FM_TYPE_INT,2,"5",false);
 			self::$FM["CreatedAt"] = new FieldMap("CreatedAt","attendance","created_at",false,FM_TYPE_TIMESTAMP,null,"CURRENT_TIMESTAMP",false);
 			self::$FM["ModifiedAt"] = new FieldMap("ModifiedAt","attendance","modified_at",false,FM_TYPE_TIMESTAMP,null,"0000-00-00 00:00:00",false);
 			self::$FM["UserSubmitted"] = new FieldMap("UserSubmitted","attendance","user_submitted",false,FM_TYPE_VARCHAR,100,null,false);
+			self::$FM["ModeOfTransport"] = new FieldMap("ModeOfTransport","attendance","mode_of_transport",false,FM_TYPE_VARCHAR,50,null,false);
+			self::$FM["DebriefWhatWorked"] = new FieldMap("DebriefWhatWorked","attendance","debrief_what_worked",false,FM_TYPE_VARCHAR,100,null,false);
+			self::$FM["DebriefToImprove"] = new FieldMap("DebriefToImprove","attendance","debrief_to_improve",false,FM_TYPE_VARCHAR,100,null,false);
+			self::$FM["DebriefDidntWork"] = new FieldMap("DebriefDidntWork","attendance","debrief_didnt_work",false,FM_TYPE_VARCHAR,100,null,false);
+			self::$FM["RatingOrgObjectives"] = new FieldMap("RatingOrgObjectives","attendance","rating_org_objectives",false,FM_TYPE_INT,2,"5",false);
+			self::$FM["RatingFunforkids"] = new FieldMap("RatingFunforkids","attendance","rating_funforkids",false,FM_TYPE_INT,2,"5",false);
 		}
 		return self::$FM;
 	}

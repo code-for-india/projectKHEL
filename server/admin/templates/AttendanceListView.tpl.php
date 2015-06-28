@@ -40,8 +40,14 @@
 				<th id="header_Coordinators">Coordinators<% if (page.orderBy == 'Coordinators') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_Modules">Modules<% if (page.orderBy == 'Modules') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_Beneficiaries">Beneficiaries<% if (page.orderBy == 'Beneficiaries') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_RatingSessionObjectives">Rating Session Objectives<% if (page.orderBy == 'RatingSessionObjectives') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_RatingOrgObjectives">Rating Org Objectives<% if (page.orderBy == 'RatingOrgObjectives') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_RatingFunforkids">Rating Fun For Kids<% if (page.orderBy == 'RatingFunforkids') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_ModeOfTransport">Mode Of Transport<% if (page.orderBy == 'ModeOfTransport') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_DebriefWhatWorked">Debrief What Worked<% if (page.orderBy == 'DebriefWhatWorked') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_DebriefToImprove">Debrief To Improve<% if (page.orderBy == 'DebriefToImprove') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
+				<th id="header_DebriefDidntWork">Debrief Didnt Work<% if (page.orderBy == 'DebriefDidntWork') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_Comment">Comment<% if (page.orderBy == 'Comment') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
-				<th id="header_Rating">Rating<% if (page.orderBy == 'Rating') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 <!-- UNCOMMENT TO SHOW ADDITIONAL COLUMNS
 				<th id="header_CreatedAt">Created At<% if (page.orderBy == 'CreatedAt') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
 				<th id="header_ModifiedAt">Modified At<% if (page.orderBy == 'ModifiedAt') { %> <i class='icon-arrow-<%= page.orderDesc ? 'up' : 'down' %>' /><% } %></th>
@@ -57,10 +63,15 @@
 				<td><%= _.escape(item.get('locationId') || '') %></td>
 				<td><%= _.escape(item.get('coordinators') || '') %></td>
 				<td><%= _.escape(item.get('modules') || '') %></td>
-
 				<td><%= _.escape(item.get('beneficiaries') || '') %></td>
+				<td><%= _.escape(item.get('ratingSessionObjectives') || '') %></td>
+				<td><%= _.escape(item.get('ratingOrgObjectives') || '') %></td>
+				<td><%= _.escape(item.get('ratingFunforkids') || '') %></td>
+				<td><%= _.escape(item.get('modeOfTransport') || '') %></td>
+				<td><%= _.escape(item.get('debriefWhatWorked') || '') %></td>
+				<td><%= _.escape(item.get('debriefToImprove') || '') %></td>
+				<td><%= _.escape(item.get('debriefDidntWork') || '') %></td>
 				<td><%= _.escape(item.get('comment') || '') %></td>
-				<td><%= _.escape(item.get('rating') || '') %></td>
 <!-- UNCOMMENT TO SHOW ADDITIONAL COLUMNS
 				<td><%if (item.get('createdAt')) { %><%= _date(app.parseDate(item.get('createdAt'))).format('MMM D, YYYY h:mm A') %><% } else { %>NULL<% } %></td>
 				<td><%if (item.get('modifiedAt')) { %><%= _date(app.parseDate(item.get('modifiedAt'))).format('MMM D, YYYY h:mm A') %><% } else { %>NULL<% } %></td>
@@ -98,7 +109,7 @@
 				<div id="locationIdInputContainer" class="control-group">
 					<label class="control-label" for="locationId">Location Id</label>
 					<div class="controls inline-inputs">
-						<input type="text" class="input-xlarge" id="locationId" placeholder="Location Id" value="<%= _.escape(item.get('locationId') || '') %>">
+						<select id="locationId" name="locationId"></select>
 						<span class="help-inline"></span>
 					</div>
 				</div>
@@ -123,20 +134,62 @@
 						<span class="help-inline"></span>
 					</div>
 				</div>
+				<div id="ratingSessionObjectivesInputContainer" class="control-group">
+					<label class="control-label" for="ratingSessionObjectives">Rating Session Objectives</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="ratingSessionObjectives" placeholder="Rating Session Objectives" value="<%= _.escape(item.get('ratingSessionObjectives') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
+				<div id="ratingOrgObjectivesInputContainer" class="control-group">
+					<label class="control-label" for="ratingOrgObjectives">Rating Org Objectives</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="ratingOrgObjectives" placeholder="Rating Org Objectives" value="<%= _.escape(item.get('ratingOrgObjectives') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
+				<div id="ratingFunforkidsInputContainer" class="control-group">
+					<label class="control-label" for="ratingFunforkids">Rating Funforkids</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="ratingFunforkids" placeholder="Rating Funforkids" value="<%= _.escape(item.get('ratingFunforkids') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>				
+				<div id="modeOfTransportInputContainer" class="control-group">
+					<label class="control-label" for="modeOfTransport">Mode Of Transport</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="modeOfTransport" placeholder="Mode Of Transport" value="<%= _.escape(item.get('modeOfTransport') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
+				<div id="debriefWhatWorkedInputContainer" class="control-group">
+					<label class="control-label" for="debriefWhatWorked">Debrief What Worked</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="debriefWhatWorked" placeholder="Debrief What Worked" value="<%= _.escape(item.get('debriefWhatWorked') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
+				<div id="debriefToImproveInputContainer" class="control-group">
+					<label class="control-label" for="debriefToImprove">Debrief To Improve</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="debriefToImprove" placeholder="Debrief To Improve" value="<%= _.escape(item.get('debriefToImprove') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
+				<div id="debriefDidntWorkInputContainer" class="control-group">
+					<label class="control-label" for="debriefDidntWork">Debrief Didnt Work</label>
+					<div class="controls inline-inputs">
+						<input type="text" class="input-xlarge" id="debriefDidntWork" placeholder="Debrief Didnt Work" value="<%= _.escape(item.get('debriefDidntWork') || '') %>">
+						<span class="help-inline"></span>
+					</div>
+				</div>
 				<div id="commentInputContainer" class="control-group">
 					<label class="control-label" for="comment">Comment</label>
 					<div class="controls inline-inputs">
 						<input type="text" class="input-xlarge" id="comment" placeholder="Comment" value="<%= _.escape(item.get('comment') || '') %>">
 						<span class="help-inline"></span>
 					</div>
-				</div>
-				<div id="ratingInputContainer" class="control-group">
-					<label class="control-label" for="rating">Rating</label>
-					<div class="controls inline-inputs">
-						<input type="text" class="input-xlarge" id="rating" placeholder="Rating" value="<%= _.escape(item.get('rating') || '') %>">
-						<span class="help-inline"></span>
-					</div>
-				</div>
+				</div>				
 				<div id="createdAtInputContainer" class="control-group">
 					<label class="control-label" for="createdAt">Created At</label>
 					<div class="controls inline-inputs">
@@ -172,6 +225,7 @@
 						<span class="help-inline"></span>
 					</div>
 				</div>
+				
 			</fieldset>
 		</form>
 

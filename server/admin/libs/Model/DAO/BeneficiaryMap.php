@@ -52,7 +52,7 @@ class BeneficiaryMap implements IDaoMap, IDaoMap2
 		{
 			self::$FM = Array();
 			self::$FM["Id"] = new FieldMap("Id","beneficiary","id",true,FM_TYPE_INT,15,null,true);
-			self::$FM["LocationId"] = new FieldMap("LocationId","beneficiary","location_id",false,FM_TYPE_INT,11,null,false);
+			self::$FM["LocationId"] = new FieldMap("LocationId","beneficiary","location_id",false,FM_TYPE_INT,15,null,false);
 			self::$FM["Name"] = new FieldMap("Name","beneficiary","name",false,FM_TYPE_VARCHAR,100,null,false);
             self::$FM["Class"] = new FieldMap("Class","beneficiary","class",false,FM_TYPE_VARCHAR,10,null,false);
 			self::$FM["Age"] = new FieldMap("Age","beneficiary","age",false,FM_TYPE_INT,3,null,false);

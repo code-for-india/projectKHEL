@@ -43,7 +43,7 @@ class AttendanceDAO extends Phreezable
 	public $Comment;
 
 	/** @var int */
-	public $Rating;
+	public $RatingSessionObjectives;
 
 	/** @var timestamp */
 	public $CreatedAt;
@@ -54,6 +54,23 @@ class AttendanceDAO extends Phreezable
 	/** @var string */
 	public $UserSubmitted;
 
+	/** @var string */
+	public $ModeOfTransport;
+
+	/** @var string */
+	public $DebriefWhatWorked;
+
+	/** @var string */
+	public $DebriefToImprove;
+
+	/** @var string */
+	public $DebriefDidntWork;
+
+	/** @var int */
+	public $RatingOrgObjectives;
+
+	/** @var int */
+	public $RatingFunforkids;
 
 
 }

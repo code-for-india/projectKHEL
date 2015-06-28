@@ -25,6 +25,9 @@ class BeneficiaryReporter extends Reporter
 	public $Id;
 	public $LocationId;
 	public $Name;
+	public $Class;
+	public $Age;
+	public $Sex;
 	public $CreatedAt;
 
 	/*
@@ -42,6 +45,9 @@ class BeneficiaryReporter extends Reporter
 			,`beneficiary`.`id` as Id
 			,`beneficiary`.`location_id` as LocationId
 			,`beneficiary`.`name` as Name
+			,`beneficiary`.`class` as Class
+			,`beneficiary`.`age` as Age
+			,`beneficiary`.`sex` as Sex
 			,`beneficiary`.`created_at` as CreatedAt
 		from `beneficiary`";
 

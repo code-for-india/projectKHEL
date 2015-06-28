@@ -145,10 +145,16 @@ model.AttendanceModel = Backbone.Model.extend({
 	modules: '',
 	beneficiaries: '',
 	comment: '',
-	rating: '',
+	ratingSessionObjectives: '',
 	createdAt: '',
 	modifiedAt: '',
 	userSubmitted: '',
+	modeOfTransport: '',
+	debriefWhatWorked: '',
+	debriefToImprove: '',
+	debriefDidntWork: '',
+	ratingOrgObjectives: '',
+	ratingFunforkids: '',
 	defaults: {
 		'id': null,
 		'heldOn': new Date(),
@@ -157,10 +163,16 @@ model.AttendanceModel = Backbone.Model.extend({
 		'modules': '',
 		'beneficiaries': '',
 		'comment': '',
-		'rating': '',
+		'ratingSessionObjectives': '',
 		'createdAt': '',
 		'modifiedAt': '',
-		'userSubmitted': ''
+		'userSubmitted': '',
+		'modeOfTransport': '',
+		'debriefWhatWorked': '',
+		'debriefToImprove': '',
+		'debriefDidntWork': '',
+		'ratingOrgObjectives': '',
+		'ratingFunforkids': ''
 	}
 });
 
@@ -181,11 +193,17 @@ model.BeneficiaryModel = Backbone.Model.extend({
 	id: '',
 	locationId: '',
 	name: '',
+	class: '',
+	age: '',
+	sex: '',
 	createdAt: '',
 	defaults: {
 		'id': null,
 		'locationId': '',
 		'name': '',
+		'class': '',
+		'age': '',
+		'sex': '',
 		'createdAt': ''
 	}
 });

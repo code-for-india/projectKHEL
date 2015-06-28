@@ -52,7 +52,7 @@ class AttendanceController extends AppBaseController
 			// TODO: this will limit results based on all properties included in the filter list 
 			$filter = RequestUtil::Get('filter');
 			if ($filter) $criteria->AddFilter(
-				new CriteriaFilter('Id,HeldOn,LocationId,Coordinators,Modules,Beneficiaries,Comment,Rating,CreatedAt,ModifiedAt,UserSubmitted'
+				new CriteriaFilter('Id,HeldOn,LocationId,Coordinators,Modules,Beneficiaries,Comment,RatingSessionObjectives,CreatedAt,ModifiedAt,UserSubmitted,ModeOfTransport,DebriefWhatWorked,DebriefToImprove,DebriefDidntWork,RatingOrgObjectives,RatingFunforkids'
 				, '%'.$filter.'%')
 			);
 
@@ -159,10 +159,16 @@ class AttendanceController extends AppBaseController
 			$attendance->Modules = $this->SafeGetVal($json, 'modules');
 			$attendance->Beneficiaries = $this->SafeGetVal($json, 'beneficiaries');
 			$attendance->Comment = $this->SafeGetVal($json, 'comment');
-			$attendance->Rating = $this->SafeGetVal($json, 'rating');
+			$attendance->RatingSessionObjectives = $this->SafeGetVal($json, 'ratingSessionObjectives');
 			$attendance->CreatedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'createdAt')));
 			$attendance->ModifiedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'modifiedAt')));
 			$attendance->UserSubmitted = $this->SafeGetVal($json, 'userSubmitted');
+			$attendance->ModeOfTransport = $this->SafeGetVal($json, 'modeOfTransport');
+			$attendance->DebriefWhatWorked = $this->SafeGetVal($json, 'debriefWhatWorked');
+			$attendance->DebriefToImprove = $this->SafeGetVal($json, 'debriefToImprove');
+			$attendance->DebriefDidntWork = $this->SafeGetVal($json, 'debriefDidntWork');
+			$attendance->RatingOrgObjectives = $this->SafeGetVal($json, 'ratingOrgObjectives');
+			$attendance->RatingFunforkids = $this->SafeGetVal($json, 'ratingFunforkids');
 
 			$attendance->Validate();
 			$errors = $attendance->GetValidationErrors();
@@ -213,10 +219,16 @@ class AttendanceController extends AppBaseController
 			$attendance->Modules = $this->SafeGetVal($json, 'modules', $attendance->Modules);
 			$attendance->Beneficiaries = $this->SafeGetVal($json, 'beneficiaries', $attendance->Beneficiaries);
 			$attendance->Comment = $this->SafeGetVal($json, 'comment', $attendance->Comment);
-			$attendance->Rating = $this->SafeGetVal($json, 'rating', $attendance->Rating);
+			$attendance->RatingSessionObjectives = $this->SafeGetVal($json, 'ratingSessionObjectives', $attendance->RatingSessionObjectives);
 			$attendance->CreatedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'createdAt', $attendance->CreatedAt)));
 			$attendance->ModifiedAt = date('Y-m-d H:i:s',strtotime($this->SafeGetVal($json, 'modifiedAt', $attendance->ModifiedAt)));
 			$attendance->UserSubmitted = $this->SafeGetVal($json, 'userSubmitted', $attendance->UserSubmitted);
+			$attendance->ModeOfTransport = $this->SafeGetVal($json, 'modeOfTransport', $attendance->ModeOfTransport);
+			$attendance->DebriefWhatWorked = $this->SafeGetVal($json, 'debriefWhatWorked', $attendance->DebriefWhatWorked);
+			$attendance->DebriefToImprove = $this->SafeGetVal($json, 'debriefToImprove', $attendance->DebriefToImprove);
+			$attendance->DebriefDidntWork = $this->SafeGetVal($json, 'debriefDidntWork', $attendance->DebriefDidntWork);
+			$attendance->RatingOrgObjectives = $this->SafeGetVal($json, 'ratingOrgObjectives', $attendance->RatingOrgObjectives);
+			$attendance->RatingFunforkids = $this->SafeGetVal($json, 'ratingFunforkids', $attendance->RatingFunforkids);
 
 			$attendance->Validate();
 			$errors = $attendance->GetValidationErrors();
