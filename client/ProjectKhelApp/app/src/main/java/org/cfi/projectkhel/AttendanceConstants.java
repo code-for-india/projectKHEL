@@ -13,4 +13,7 @@ public interface AttendanceConstants {
   int ROW_DEFRIEFING = 7;
   int ROW_COMMENTS = 8;
 
+  // Keys into Shared Preferences
+  String KEY_MASTER_SYNC     = "app.master.sync";
+  String KEY_ATTENDANCE_SYNC = "app.att.sync";
 }

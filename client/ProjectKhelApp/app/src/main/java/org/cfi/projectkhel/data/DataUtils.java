@@ -35,7 +35,8 @@ public final class DataUtils {
     return entryList.get(selItem).getId();
   }
 
-  public static List<Integer> getIdsFromSelectedItems(List<Integer> selectedItems, List<? extends Entry> entryList) {
+  public static List<Integer> getIdsFromSelectedItems(List<Integer> selectedItems,
+                                                      List<? extends Entry> entryList) {
 //    Log.d(AttendanceConstants.TAG, "In getIdsFromSelectedItems...");
     final List<Integer> data = new ArrayList<>(selectedItems.size() * 2);
     for (Integer id : selectedItems) {
@@ -46,7 +47,8 @@ public final class DataUtils {
     return data;
   }
 
-  public static List<Integer> getIdsFromSelectedItems(Set<Integer> selectedItems, List<? extends Entry> entryList) {
+  public static List<Integer> getIdsFromSelectedItems(Set<Integer> selectedItems,
+                                                      List<? extends Entry> entryList) {
     final List<Integer> data = new ArrayList<>(selectedItems.size() * 2);
     for (Integer id : selectedItems) {
       data.add(entryList.get(id).getId());

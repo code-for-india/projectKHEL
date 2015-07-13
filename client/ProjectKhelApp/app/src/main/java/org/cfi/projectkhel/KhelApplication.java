@@ -5,7 +5,6 @@ import android.app.Application;
 import org.cfi.projectkhel.data.DataManager;
 import org.cfi.projectkhel.data.DataStorage;
 import org.cfi.projectkhel.data.storage.LocalStorage;
-import org.cfi.projectkhel.data.FileStorageUtils;
 
 /**
  * Maintains the application wide instances.

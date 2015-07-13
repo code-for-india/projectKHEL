@@ -41,26 +41,44 @@
         android:layout_below="@id/attendanceButton"
         android:layout_centerHorizontal="true" />
 
+    <!--<Space-->
+    <!--android:layout_width="20px"-->
+    <!--android:layout_height="20px"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_centerHorizontal="true"/>-->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/lastsynced"
-        android:id="@+id/lastSyncLblTextView"
+        android:id="@+id/lastMasterSyncTextView"
+        android:text="@string/last_master_sync"
         android:layout_below="@+id/syncButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="83dp"
-        style="@style/list_data"
-        />
+        android:visibility="visible"
+        style="@style/list_data" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/lastSyncTextView"
-        android:layout_below="@+id/lastSyncLblTextView"
-        style="@style/list_data"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/lastAttendanceSyncTextView"
+        android:text="@string/last_att_sync"
+        android:layout_below="@+id/lastMasterSyncTextView"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        style="@style/list_data"  />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/offlineRecsTextView"
+        android:text="@string/offline_recs"
+        android:layout_below="@+id/lastAttendanceSyncTextView"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        style="@style/list_data"  />
 
 </RelativeLayout>

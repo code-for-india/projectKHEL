@@ -50,6 +50,10 @@
     <string name="debrief_2">What can be improved?</string>
     <string name="debrief_3">What didn\'t work?</string>
 
-    <string name="lastsynced">Last synced on</string>
-    <string name="lastsynckey">app.last.sync</string>
+    <string name="last_master_sync">Last Master Sync: </string>
+    <string name="last_att_sync">Last Attendance Sync: </string>
+    <string name="offline_recs">Offline records: </string>
+
+    <string name="missing_data">Ah! You missed something</string>
+    <string name="sync_now">Hang on. I am syncing with Server...</string>
 </resources>

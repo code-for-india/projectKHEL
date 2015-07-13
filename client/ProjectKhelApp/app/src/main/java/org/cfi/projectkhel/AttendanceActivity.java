@@ -121,21 +121,29 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   public void onSubmitClick(View v) {
     Log.d(TAG, "Attendance: " +  attendance);
-    // TODO - Verify if all data is filled up, Ask for confirmation first.
-    AlertDialog show = new AlertDialog.Builder(this)
-        .setTitle(getString(R.string.submit_attendance))
-        .setMessage(getString(R.string.submit_confirm))
-        .setIcon(android.R.drawable.ic_menu_compass)
-        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+    String error = attendance.validate();
+    if (error == null) {
+      new AlertDialog.Builder(this)
+          .setTitle(getString(R.string.submit_attendance))
+          .setMessage(getString(R.string.submit_confirm))
+          .setIcon(android.R.drawable.ic_menu_compass)
+          .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-          public void onClick(DialogInterface dialog, int whichButton) {
-            Toast.makeText(AttendanceActivity.this, getString(R.string.submit_inform), Toast.LENGTH_SHORT).show();
-            ((KhelApplication) getApplication()).getDataFetcher().pushAttendanceData(attendance);
-            finish();
-          }
-        })
-        .setNegativeButton(android.R.string.no, null).show();
-
+            public void onClick(DialogInterface dialog, int whichButton) {
+              Toast.makeText(AttendanceActivity.this, getString(R.string.submit_inform), Toast.LENGTH_SHORT).show();
+              ((KhelApplication) getApplication()).getDataFetcher().pushAttendanceData(attendance);
+              finish();
+            }
+          })
+          .setNegativeButton(android.R.string.no, null).show();
+    } else {
+      new AlertDialog.Builder(this)
+          .setTitle(getString(R.string.missing_data))
+          .setMessage("Can you fill up " + error + "?")
+          .setIcon(android.R.drawable.ic_dialog_alert)
+          .setPositiveButton(android.R.string.ok, null)
+          .show();
+    }
   }
 
   public void onResetClick(View v) {

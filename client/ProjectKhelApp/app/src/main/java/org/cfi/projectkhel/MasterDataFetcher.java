@@ -1,6 +1,8 @@
 package org.cfi.projectkhel;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,7 +21,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -28,19 +33,21 @@ import java.util.List;
  */
 public class MasterDataFetcher {
 
-  //  private static final int MIN_LENGTH = 10;
   private static final int LOC_INDEX = 0;
   private static final int COOR_INDEX = 1;
   private static final int MOD_INDEX = 2;
   private static final int BENF_INDEX = 3;
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
   private FileStorageUtils storageHandler;
   private String masterSyncData;
-  private Context context;
+  private AppContext appContext;
+  private SharedPreferences sharedPref;
 
-  public MasterDataFetcher(Context pContext) {
-    context = pContext;
-    storageHandler = new FileStorageUtils(context);
+  public MasterDataFetcher(AppContext pContext, SharedPreferences pSharedPref) {
+    appContext = pContext;
+    storageHandler = new FileStorageUtils(appContext.getContext());
+    this.sharedPref = pSharedPref;
   }
 
   public FileStorageUtils getStorageHandler() {
@@ -51,12 +58,9 @@ public class MasterDataFetcher {
    * Pulls all the master data from the server.
    */
   public void pullMasterData(boolean alwaysPull) {
-
     // Get the master sync record.
     masterSyncData = storageHandler.readFileData(FileStorageUtils.FILE_MASTER_SYNC);
-
     Log.d(AttendanceConstants.TAG, "Sync Master data: " + masterSyncData);
-
     // Based on the Master sync record, fetch the ones that need update.
     if (!alwaysPull) {
       fetchAndStore("mastersync", null, FileStorageUtils.FILE_MASTER_SYNC, false);
@@ -74,12 +78,13 @@ public class MasterDataFetcher {
   }
 
   public void pushOfflineAttendanceData() {
-    Log.d(AttendanceConstants.TAG, "Pushing offline Attendances");
     List<String> attendances = storageHandler.readFileDataLines(FileStorageUtils.FILE_ATTENDANCE);
     if (attendances.size() == 0) {
       Log.d(AttendanceConstants.TAG, "No offline attendances to sync");
     } else {
-      Toast.makeText(context, "Syncing " + attendances.size() + " offline Attendances" , Toast.LENGTH_SHORT).show();
+      Log.d(AttendanceConstants.TAG, "Pushing offline Attendances");
+      Toast.makeText(appContext.getContext(),
+          "Syncing " + attendances.size() + " offline Attendances" , Toast.LENGTH_SHORT).show();
       // Clear the file since we don't want these to be submitted again.
       storageHandler.emptyFile(FileStorageUtils.FILE_ATTENDANCE);
       for (String s : attendances) {
@@ -88,6 +93,9 @@ public class MasterDataFetcher {
     }
   }
 
+  public int getOfflineAttendances() {
+    return storageHandler.readFileDataLines(FileStorageUtils.FILE_ATTENDANCE).size();
+  }
   /**
    * Write attendance to internal storage
    * @param jsonData pass json form (attendance.toJSON())
@@ -114,6 +122,7 @@ public class MasterDataFetcher {
         if (store) {
           storageHandler.writeFileData(fileName, responseString, false);
           Log.d(AttendanceConstants.TAG, "Wrote to file: " + fileName);
+          updateSyncTime(AttendanceConstants.KEY_MASTER_SYNC);
         }
 
         if (FileStorageUtils.FILE_MASTER_SYNC.equals(fileName)) {
@@ -161,6 +170,7 @@ public class MasterDataFetcher {
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
           // If the response is JSONObject instead of expected JSONArray
           Log.d(AttendanceConstants.TAG, "Post attendance to Server. Got " + response);
+          updateSyncTime(AttendanceConstants.KEY_ATTENDANCE_SYNC);
         }
 
         @Override
@@ -215,5 +225,16 @@ public class MasterDataFetcher {
     }
     // AIOOB Exception it if not valid
     return -1;
+  }
+
+  private void updateSyncTime(String key) {
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putString(key, now());
+    editor.apply();
+    appContext.updateUISyncTimes();
+  }
+
+  private String now() {
+    return DATE_FORMAT.format(Calendar.getInstance().getTime());
   }
 }

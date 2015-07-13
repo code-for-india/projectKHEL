@@ -9,16 +9,15 @@ import java.util.List;
 /**
  * Data holder for attendance. Useful to post JSON to server.
  */
-public class Attendance {
+public final class Attendance {
 
+  private String userId;
   private String date;
   private int location;
   private List<Integer> coordinators;
   private List<Integer> modules;
   private List<Integer> beneficiaries;
   private String comments;
-//  private int rating;
-  private String userId;
   // New mode of transport
   private String modeOfTransport;
   // New debriefing
@@ -29,6 +28,8 @@ public class Attendance {
   private int ratingSessionObjectives;
   private int ratingOrgObjectives;
   private int ratingFunForKids;
+  // used for field validation.
+  enum MyType { INT, STR, LST};
 
   private Attendance() {
     coordinators = new ArrayList<>();
@@ -72,14 +73,6 @@ public class Attendance {
   public void setComments(String comments) {
     this.comments = comments;
   }
-
-//  public int getRating() {
-//    return rating;
-//  }
-//
-//  public void setRating(int rating) {
-//    this.rating = rating;
-//  }
 
   public void addCoordinator(int coordinatorId) {
     coordinators.add(coordinatorId);
@@ -177,6 +170,54 @@ public class Attendance {
   }
 
   /**
+   * Validate all the fields and return name of missing field.
+   * @return missing field name
+   */
+  public String validate() {
+    String error = null;
+    try {
+      checkValue(date, MyType.STR, "Date");
+      checkValue(location, MyType.INT, "Location");
+      checkValue(coordinators, MyType.LST, "Coordinators");
+      checkValue(beneficiaries, MyType.LST, "Beneficiaries");
+      checkValue(modules, MyType.LST, "Modules");
+
+      checkValue(ratingSessionObjectives, MyType.INT, "Rating:Session Objectives");
+      checkValue(ratingOrgObjectives, MyType.INT, "Rating:Org Objectives");
+      checkValue(ratingFunForKids, MyType.INT, "Rating:Fun For Kids");
+
+      checkValue(modeOfTransport, MyType.STR, "Mode Of Transport");
+      checkValue(debriefWhatWorked, MyType.STR, "Debriefing:What Worked");
+      checkValue(debriefToImprove, MyType.STR, "Debriefing:To Improve");
+      checkValue(debriefDidntWork, MyType.STR, "Debriefing:Didnt Work");
+      checkValue(comments, MyType.STR, "Comments");
+    } catch (IllegalArgumentException e) {
+      error = e.getMessage();
+    }
+    return error;
+  }
+
+  private void checkValue(Object value, MyType type, String name) {
+    switch (type) {
+      case INT:
+        if (((Integer)value).intValue() == 0) {
+          throw new IllegalArgumentException(name);
+        }
+        break;
+      case STR:
+        if (value == null || ((String)value).isEmpty()) {
+          throw new IllegalArgumentException(name);
+        }
+        break;
+      case LST:
+        if (value == null || ((List<Integer>)value).isEmpty()) {
+          throw new IllegalArgumentException(name);
+        }
+        break;
+    }
+  }
+
+  /**
    * Convert in the following form
     {
         "date": "2014-02-19",
@@ -198,7 +239,6 @@ public class Attendance {
       jsonObj.put("modules", listToCSV(modules));
       jsonObj.put("beneficiaries", listToCSV(beneficiaries));
       jsonObj.put("comments", comments);
-//      jsonObj.put("rating", rating);
       jsonObj.put("userid", userId);
       jsonObj.put("modeoftransport", modeOfTransport);
       jsonObj.put("debriefwhatworked", debriefWhatWorked);
@@ -252,10 +292,12 @@ public class Attendance {
     at1.addModule(8);at1.addModule(228);at1.addModule(972);
     at1.addBeneficiary(33);at1.addBeneficiary(44);at1.addBeneficiary(55);at1.addBeneficiary(66);
     at1.setComments("Great Event");
+    at1.setRatingFunForKids(3);at1.setRatingSessionObjectives(4);at1.setRatingOrgObjectives(3);
 
     System.out.println(at1);
+
+    System.out.println("Validate::" + at1.validate());
     //System.out.println(at1.toJSON());
   }
-
 
 }
