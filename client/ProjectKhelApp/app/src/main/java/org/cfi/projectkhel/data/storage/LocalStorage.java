@@ -102,12 +102,33 @@ public class LocalStorage implements DataStorage {
   private String getBeneficiaryNameTag(final JSONObject jsonEntry) {
     final StringBuilder sb = new StringBuilder();
     sb.append(jsonEntry.optString("name"));
-    sb.append(" ");
-    sb.append(jsonEntry.optString("class", ""));
-    sb.append(" ");
-    sb.append(jsonEntry.optString("age", ""));
-    sb.append(" ");
-    sb.append(jsonEntry.optString("sex", ""));
+    final String studentClass = jsonEntry.optString("class", "");
+    if (studentClass.length() > 0) {
+      sb.append(" (");
+      sb.append(studentClass);
+      sb.append(")");
+    }
     return sb.toString();
   }
+
+//  private List<LocationEntry> getSortedLocationEntryList() {
+//    List<LocationEntry> list = new ArrayList<LocationEntry>() {
+//      public boolean add(LocationEntry entry) {
+//        int index = Collections.binarySearch(this, entry, beneficiaryComparator);
+//        if (index < 0) index = ~index;
+//        super.add(index, entry);
+//        return true;
+//      }
+//    };
+//    return list;
+//  }
+//
+//  // This comparator has special logic based on
+//  class BeneficiaryComparator implements Comparator<LocationEntry> {
+//
+//    @Override
+//    public int compare(LocationEntry lhs, LocationEntry rhs) {
+//      return 0;
+//    }
+//  }
 }
