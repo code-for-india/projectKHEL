@@ -90,12 +90,12 @@ ALTER TABLE attendance
 ADD FOREIGN KEY (location_id) REFERENCES location(id);
 
 ALTER TABLE attendance
-ADD `modeoftransport` `mode_of_transport` VARCHAR( 50 ) NULL,
-ADD `ratingorgobjectives` `rating_org_objectives` INT( 2 ) NULL DEFAULT '5' ,
-ADD `ratingfunforkids` `rating_funforkids` INT( 2 ) NULL DEFAULT '5',
-ADD `debriefwhatworked` `debrief_what_worked` varchar(100) NULL,
-ADD `debrieftoimprove` `debrief_to_improve` varchar(100) NULL,
-ADD `debriefdidntwork` `debrief_didnt_work` varchar(100) NULL;
+ADD `mode_of_transport` VARCHAR( 50 ) NULL,
+ADD `rating_org_objectives` INT( 2 ) NULL DEFAULT '5' ,
+ADD `rating_funforkids` INT( 2 ) NULL DEFAULT '5',
+ADD `debrief_what_worked` varchar(100) NULL,
+ADD `debrief_to_improve` varchar(100) NULL,
+ADD `debrief_didnt_work` varchar(100) NULL;
 
 ALTER TABLE attendance
 CHANGE `rating` `rating` INT( 2 ) NULL DEFAULT '5',
@@ -107,4 +107,7 @@ CHANGE `age` `age` INT( 3 ) NULL DEFAULT '0',
 CHANGE `sex` `sex` CHAR( 1 ) NULL DEFAULT 'M';
 
 
-
+ALTER TABLE attendance
+CHANGE `debrief_what_worked` `debrief_what_worked` varchar(500) NULL,
+CHANGE `debrief_to_improve` `debrief_to_improve` varchar(500) NULL,
+CHANGE `debrief_didnt_work` `debrief_didnt_work` varchar(500) NULL;
