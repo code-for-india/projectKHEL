@@ -1,7 +1,9 @@
 package org.cfi.projectkhel;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -13,10 +15,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.cfi.projectkhel.data.DataManager;
+import org.cfi.projectkhel.data.DataUtils;
+import org.cfi.projectkhel.model.Attendance;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Main Activity of the Application.
@@ -31,6 +39,7 @@ public class MainActivity extends ActionBarActivity implements AppContext {
   private TextView mLastAttendanceSyncTime;
   private TextView mOfflineRecords;
   private Handler mHandler;
+  private Button mSavedAttendancesBtn;
 
   private SharedPreferences sharedPref;
 
@@ -41,14 +50,15 @@ public class MainActivity extends ActionBarActivity implements AppContext {
     sharedPref = getPreferences(Context.MODE_PRIVATE);
     mHandler = new Handler();
 
-    // Get the application instance
-    app = (KhelApplication) getApplication();
-    masterDataFetcher = new MasterDataFetcher(this, sharedPref);
-    app.setDataFetcher(masterDataFetcher);
-
     mLastMasterSyncTime = (TextView) findViewById(R.id.lastMasterSyncTextView);
     mLastAttendanceSyncTime = (TextView) findViewById(R.id.lastAttendanceSyncTextView);
     mOfflineRecords = (TextView) findViewById(R.id.offlineRecsTextView);
+    mSavedAttendancesBtn = (Button) findViewById(R.id.savedAttButton);
+
+    masterDataFetcher = new MasterDataFetcher(this, sharedPref);
+    // Get the application instance
+    app = (KhelApplication) getApplication();
+    app.init(this, masterDataFetcher);
 
     // Not sure if this is the best place to load all data
     DataManager.getInstance().loadAll();
@@ -66,11 +76,13 @@ public class MainActivity extends ActionBarActivity implements AppContext {
   protected void onResume() {
     super.onResume();
     updateUISyncTimes();
+    mSavedAttendancesBtn.setText("Saved (" + app.getSavedAttendances().size() + ")");
   }
 
   public void onAttendanceClick(View v) {
     if (DataManager.getInstance().isDataPopulated()) {
       Intent intent = new Intent(this, AttendanceActivity.class);
+      intent.putExtra(AttendanceConstants.KEY_SELECTED_IDX, -1);
       startActivityForResult(intent, MAIN_ACTIVITY);
     } else {
       // No data populated.
@@ -86,6 +98,47 @@ public class MainActivity extends ActionBarActivity implements AppContext {
       Log.i(AttendanceConstants.TAG, getString(R.string.nonetwork));
       Toast.makeText(this, getString(R.string.nonetwork), Toast.LENGTH_SHORT).show();
     }
+  }
+
+  public void onSavedAttendancesClick(View v) {
+    if (app.getSavedAttendances().size() > 0) {
+      handleSavedAttendanceDialog();
+    } else {
+      Toast.makeText(this, getString(R.string.nosavedattendances), Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  private void handleSavedAttendanceDialog() {
+    // List where we track the selected item
+    final Integer selectedItem[] = new Integer[1];
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle(getString(R.string.location_dialog_title))
+        .setIcon(android.R.drawable.ic_dialog_map)
+        .setSingleChoiceItems(app.getAttendanceNames(), 0,
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                selectedItem[0] = which;
+              }
+            })
+        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            Log.d(AttendanceConstants.TAG, "Starting Attendance activity with index: " + selectedItem[0]);
+            Intent intent = new Intent(MainActivity.this, AttendanceActivity.class);
+            intent.putExtra(AttendanceConstants.KEY_SELECTED_IDX, selectedItem[0]);
+            startActivityForResult(intent, MAIN_ACTIVITY);
+          }
+        })
+        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            // do nothing
+          }
+        });
+
+    builder.show();
   }
 
   private boolean isConnected() {

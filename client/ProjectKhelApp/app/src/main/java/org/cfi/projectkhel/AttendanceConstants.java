@@ -16,4 +16,6 @@ public interface AttendanceConstants {
   // Keys into Shared Preferences
   String KEY_MASTER_SYNC     = "app.master.sync";
   String KEY_ATTENDANCE_SYNC = "app.att.sync";
+
+  String KEY_SELECTED_IDX = "sel.attendance.idx";
 }

@@ -41,6 +41,18 @@
         android:layout_below="@id/attendanceButton"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/savedAttButton"
+        android:text="Saved"
+        android:onClick="onSavedAttendancesClick"
+        android:background="@drawable/khelbutton"
+        style="@style/button_text"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp"
+        android:layout_below="@id/syncButton"
+        android:layout_centerHorizontal="true" />
     <!--<Space-->
     <!--android:layout_width="20px"-->
     <!--android:layout_height="20px"-->
@@ -53,7 +65,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/lastMasterSyncTextView"
         android:text="@string/last_master_sync"
-        android:layout_below="@+id/syncButton"
+        android:layout_below="@+id/savedAttButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="83dp"
         android:visibility="visible"

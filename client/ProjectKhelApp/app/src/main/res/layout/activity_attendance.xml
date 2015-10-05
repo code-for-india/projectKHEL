@@ -54,6 +54,16 @@
             style="@style/button_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:text="Save"
+            android:layout_marginLeft="15dp"
+            android:onClick="onSaveClick"
+            android:background="@drawable/khelbutton"
+            style="@style/button_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 

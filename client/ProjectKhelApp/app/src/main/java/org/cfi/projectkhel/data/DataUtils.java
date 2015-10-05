@@ -67,6 +67,16 @@ public final class DataUtils {
     return i;
   }
 
+  public static String getSelectedNameFromId(Integer selId, List<? extends Entry> entryList) {
+    String name = "";
+    for (Entry entry : entryList) {
+      if (entry.getId().equals(selId)) {
+        name = entry.getName();
+      }
+    }
+    return name;
+  }
+
   public static boolean[] getSelectedItemsFromIds(List<Integer> selectedIds, List<? extends Entry> entryList) {
 //    Log.d(AttendanceConstants.TAG, "In getSelectedItemsFromIds...");
     final boolean[] data = new boolean[entryList.size()];

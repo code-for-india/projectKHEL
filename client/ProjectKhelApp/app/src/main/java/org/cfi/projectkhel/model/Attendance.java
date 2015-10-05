@@ -3,13 +3,16 @@ package org.cfi.projectkhel.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Data holder for attendance. Useful to post JSON to server.
  */
-public final class Attendance {
+public final class Attendance implements Serializable {
 
   private String userId;
   private String date;
@@ -28,10 +31,15 @@ public final class Attendance {
   private int ratingSessionObjectives;
   private int ratingOrgObjectives;
   private int ratingFunForKids;
+
+  // to generate unique attendance-id for saving
+  private long timestamp;
+
   // used for field validation.
-  enum MyType { INT, STR, LST};
+  enum MyType { INT, STR, LST}
 
   private Attendance() {
+    timestamp = System.currentTimeMillis();
     coordinators = new ArrayList<>();
     modules = new ArrayList<>();
     beneficiaries = new ArrayList<>();
@@ -200,7 +208,7 @@ public final class Attendance {
   private void checkValue(Object value, MyType type, String name) {
     switch (type) {
       case INT:
-        if (((Integer)value).intValue() == 0) {
+        if (((Integer)value) == 0) {
           throw new IllegalArgumentException(name);
         }
         break;
@@ -210,7 +218,7 @@ public final class Attendance {
         }
         break;
       case LST:
-        if (value == null || ((List<Integer>)value).isEmpty()) {
+        if (value == null || ((List<Integer>) value).isEmpty()) {
           throw new IllegalArgumentException(name);
         }
         break;
@@ -278,6 +286,30 @@ public final class Attendance {
   private static String listToCSV(List<Integer> list) {
     final String str = list.toString();
     return str.replaceAll("\\[|\\]", "");
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Attendance that = (Attendance) o;
+
+    if (timestamp != that.timestamp) return false;
+    if (location != that.location) return false;
+    if (date != null ? !date.equals(that.date) : that.date != null) return false;
+    if (!userId.equals(that.userId)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = (int) (timestamp ^ (timestamp >>> 32));
+    result = 31 * result + userId.hashCode();
+    result = 31 * result + (date != null ? date.hashCode() : 0);
+    result = 31 * result + location;
+    return result;
   }
 
   public static void main(String[] args) {

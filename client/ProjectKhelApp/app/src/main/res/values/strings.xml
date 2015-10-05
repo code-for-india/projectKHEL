@@ -26,13 +26,19 @@
 
     <string name="nomastersync">Master data missing. Doing Sync..</string>
     <string name="nonetwork">No connection. Check network connectivity</string>
+    <string name="nosavedattendances">No saved attendances</string>
+
     <string name="submit_attendance">Submit Attendance?</string>
     <string name="ask_submit">Do you want to submit the data?</string>
+    <string name="submit_confirm">Do you want to submit data?</string>
     <string name="submit_inform">Attendance data submitted</string>
     <string name="offlinesync">Syncing Offline Attendances</string>
     <string name="reset_confirm">Do you want to reset the data?</string>
-    <string name="submit_confirm">Do you want to submit data?</string>
     <string name="reset_attendance">Reset Attendance?</string>
+
+    <string name="save_confirm">Do you want to save the data?</string>
+    <string name="save_attendance">Save Attendance?</string>
+
     <string name="location_dialog_title">Pick Location</string>
     <string name="coor_dialog_title">Pick Coordinators</string>
     <string name="mod_dialog_title">Pick Modules</string>
@@ -54,6 +60,7 @@
     <string name="last_att_sync">Last Attendance Sync: </string>
     <string name="offline_recs">Offline records: </string>
 
-    <string name="missing_data">Ah! You missed something</string>
+    <string name="missing_data">Ah! You missed some</string>
+    <string name="missing_error">field is lonely. Care to add something in there?</string>
     <string name="sync_now">Hang on. I am syncing with Server...</string>
 </resources>

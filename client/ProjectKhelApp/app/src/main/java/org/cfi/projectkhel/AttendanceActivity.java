@@ -34,6 +34,8 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Attendance Activity
@@ -46,6 +48,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
   private final int SHORTEN_LEN = 15;
 
+  private KhelApplication app;
   private ListView mainList;
   private MyCustomListAdapter listAdapter;
   private List<MyCustomData> mData = new ArrayList<>();
@@ -76,6 +79,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
 
     mainList = (ListView) findViewById(R.id.listView1);
     mainList.setOnItemClickListener(this);
+    app = (KhelApplication) getApplication();
 
     initialize();
 
@@ -86,17 +90,27 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   }
 
   private void initialize() {
-    // TODO: Fetch the logged in user.
-    attendance = new Attendance("TODO");
-
-    for (int i = 0; i < ATTENDANCE_ELEM_LABELS.length; i++) {
-      mData.add(new MyCustomData(IMAGES[i], ATTENDANCE_ELEM_LABELS[i], ""));
-    }
-
     final Calendar c = Calendar.getInstance();
     mYear = c.get(Calendar.YEAR);
     mMonthOfYear = c.get(Calendar.MONTH);
     mDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+
+    // Check if we got a selected attendance.
+    final int selIdx = getIntent().getExtras().getInt(AttendanceConstants.KEY_SELECTED_IDX);
+    if (selIdx == -1) {
+      // TODO: Fetch the logged in user.
+      attendance = new Attendance("TODO");
+    } else {
+      attendance = app.getSelectedAttendance(selIdx);
+    }
+
+    for (int i = 0; i < ATTENDANCE_ELEM_LABELS.length; i++) {
+      if (selIdx == -1) {
+        mData.add(new MyCustomData(IMAGES[i], ATTENDANCE_ELEM_LABELS[i], ""));
+      } else {
+        mData.add(new MyCustomData(IMAGES[i], ATTENDANCE_ELEM_LABELS[i], getCustomData(i)));
+      }
+    }
   }
 
   @Override
@@ -126,12 +140,12 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
       new AlertDialog.Builder(this)
           .setTitle(getString(R.string.submit_attendance))
           .setMessage(getString(R.string.submit_confirm))
-          .setIcon(android.R.drawable.ic_menu_compass)
+          .setIcon(android.R.drawable.ic_menu_send)
           .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int whichButton) {
               Toast.makeText(AttendanceActivity.this, getString(R.string.submit_inform), Toast.LENGTH_SHORT).show();
-              ((KhelApplication) getApplication()).getDataFetcher().pushAttendanceData(attendance);
+              app.submitAttendance(attendance);
               finish();
             }
           })
@@ -139,7 +153,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     } else {
       new AlertDialog.Builder(this)
           .setTitle(getString(R.string.missing_data))
-          .setMessage("Can you fill up " + error + "?")
+          .setMessage(error + " " + getString(R.string.missing_error))
           .setIcon(android.R.drawable.ic_dialog_alert)
           .setPositiveButton(android.R.string.ok, null)
           .show();
@@ -150,7 +164,7 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
     new AlertDialog.Builder(this)
       .setTitle(getString(R.string.reset_attendance))
       .setMessage(getString(R.string.reset_confirm))
-      .setIcon(android.R.drawable.ic_menu_close_clear_cancel)
+      .setIcon(android.R.drawable.ic_menu_revert)
       .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
         public void onClick(DialogInterface dialog, int whichButton) {
@@ -161,6 +175,21 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
           listAdapter.notifyDataSetChanged();
         }})
       .setNegativeButton(android.R.string.no, null).show();
+  }
+
+  public void onSaveClick(View v) {
+    new AlertDialog.Builder(this)
+        .setTitle(getString(R.string.save_attendance))
+        .setMessage(getString(R.string.save_confirm))
+        .setIcon(android.R.drawable.ic_menu_save)
+        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+          public void onClick(DialogInterface dialog, int whichButton) {
+            // Persist current attendance values
+            app.saveAttendance(attendance);
+            finish();
+          }})
+        .setNegativeButton(android.R.string.no, null).show();
   }
 
   @Override
@@ -600,7 +629,59 @@ public class AttendanceActivity extends ActionBarActivity implements AdapterView
   }
 
   private String shortenIt(String data) {
+    if (data == null) return "";
     return data.substring(0, data.length() > SHORTEN_LEN ? SHORTEN_LEN : data.length()) + "...";
   }
 
+  // Get the custom data row for that row.
+  private String getCustomData(int row) {
+    String data = "";
+    switch (row) {
+      case 0:  // DATE
+        String date = attendance.getDate();
+        try {
+          Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");
+          Matcher matcher = pattern.matcher(attendance.getDate());
+          if (matcher.find()) {
+            mYear = Integer.parseInt(matcher.group(1));
+            mMonthOfYear = Integer.parseInt(matcher.group(2)) - 1;
+            mDayOfMonth = Integer.parseInt(matcher.group(3));
+            data = (mDayOfMonth + "-" + (mMonthOfYear + 1) + "-" + mYear);
+          }
+        } catch (Exception ex) {
+          Log.w(TAG, "Got exception while processing: " + date);
+          // just ignore the exception
+        }
+        break;
+      case 1:  // LOCATION
+        final List<Entry> locations =  DataManager.getInstance().getLocations();
+        data = DataUtils.getSelectedNameFromId(attendance.getLocation(), locations);
+        break;
+      case 2: // COORDINATOR
+        data = " [ " + attendance.getCoordinators().size() + " ] ";
+        break;
+      case 3: // BENEFICIARY
+        data = " [ " + attendance.getBeneficiaries().size() + " ] ";
+        break;
+      case 4: // MODULES
+        data = " [ " + attendance.getModules().size() + " ] ";
+        break;
+      case 5: // RATING
+        data = String.format("%.1f", (float)(attendance.getRatingFunForKids()
+                                            + attendance.getRatingOrgObjectives()
+                                            + attendance.getRatingSessionObjectives())/3.0);
+        break;
+      case 6: // row_modeoftransport
+        data = shortenIt(attendance.getModeOfTransport());
+        break;
+      case 7: // row_debriefing
+        data = shortenIt(attendance.getDebriefWhatWorked());
+        break;
+      case 8: // row_comments
+        data = shortenIt(attendance.getComments());
+        break;
+    }
+    Log.d(TAG, "Row: " + row + " Data: " + data);
+    return data;
+  }
 }
