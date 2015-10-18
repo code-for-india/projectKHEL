@@ -113,7 +113,7 @@ public class MainActivity extends ActionBarActivity implements AppContext {
     final Integer selectedItem[] = new Integer[1];
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle(getString(R.string.location_dialog_title))
+    builder.setTitle(getString(R.string.attendance_dialog_title))
         .setIcon(android.R.drawable.ic_dialog_map)
         .setSingleChoiceItems(app.getAttendanceNames(), 0,
             new DialogInterface.OnClickListener() {

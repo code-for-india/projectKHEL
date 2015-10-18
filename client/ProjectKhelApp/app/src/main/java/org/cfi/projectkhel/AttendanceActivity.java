@@ -38,11 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Attendance Activity
- *
- * TODO:
- * 1. Move all hardcoded strings into resource file.
- * 2. Generalize Dialog handling based on type (single-select, multi-select)
+ * Attendance Activity.
  */
 public class AttendanceActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
 

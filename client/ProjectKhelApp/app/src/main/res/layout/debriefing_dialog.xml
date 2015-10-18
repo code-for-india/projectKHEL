@@ -17,7 +17,9 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/debrief_work"
-        android:minLines="2"/>
+        android:scrollbars="vertical"
+        android:minLines="2"
+        android:maxLines="4"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,7 +34,9 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/debrief_impr"
-        android:minLines="2"/>
+        android:scrollbars="vertical"
+        android:minLines="2"
+        android:maxLines="4"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -47,5 +51,8 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/debrief_didntwork"
-        android:minLines="2"/>
+        android:scrollbars="vertical"
+        android:minLines="2"
+        android:maxLines="4"/>
+
 </LinearLayout>

@@ -44,6 +44,7 @@
     <string name="mod_dialog_title">Pick Modules</string>
     <string name="benef_dialog_title">Pick Beneficiaries</string>
     <string name="benef_location_select">Please select a location first</string>
+    <string name="attendance_dialog_title">Pick Attendance</string>
 
     <string name="comments_title">Enter Comments</string>
     <string name="comments_hint">How did the session go?</string>
